@@ -25,6 +25,13 @@ public class OrganizationService {
         return dao.findAll();
     }
 
+    public List<Organization> findPageOfOrganizations(int page, String organizationName) {
+        return organizationName == null ?
+                dao.findPageOfOrganizations(page) : dao.findPageOfOrganizationsWithNameLike(page, organizationName);
+    }
+
+
+
     public Organization findById(Integer id) {
         return dao.findById(id);
     }

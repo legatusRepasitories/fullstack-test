@@ -8,6 +8,7 @@ import ru.it.pro.fullstacktest.jooq.db.tables.records.OrganizationRecord;
 import ru.it.pro.fullstacktest.model.Organization;
 import ru.it.pro.fullstacktest.service.OrganizationService;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -26,9 +27,17 @@ public class OrganizationRestController {
         return organizationService.add(organization);
     }
 
+//    @GetMapping(value = "/list")
+//    public List<Organization> findAll() {
+//        return organizationService.findAll();
+//    }
+
     @GetMapping(value = "/list")
-    public List<Organization> findAll() {
-        return organizationService.findAll();
+    public List<Organization> findPageOfOrganizations(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(value = "name", required = false) String organizationName) {
+        
+        return organizationService.findPageOfOrganizations(page, organizationName);
     }
 
     @GetMapping(path = "/{id}")

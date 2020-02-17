@@ -78,6 +78,46 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
         return organizationsEntries;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Organization> findPageOfOrganizations(int page) {
+
+        List<Organization> organizationsEntries = new ArrayList<>();
+
+        List<OrganizationRecord> queryResults = dslContext
+                .selectFrom(ORGANIZATION)
+                .orderBy(ORGANIZATION.ID)
+                .limit(5)
+                .offset(page * 5)
+                .fetchInto(OrganizationRecord.class);
+
+        for (OrganizationRecord record : queryResults) {
+            Organization organization = convertQueryResultToModelObject(record);
+            organizationsEntries.add(organization);
+        }
+
+        return organizationsEntries;
+    }
+
+    @Override
+    public List<Organization> findPageOfOrganizationsWithNameLike(int page, String organizationName) {
+        List<Organization> organizationsEntries = new ArrayList<>();
+
+        List<OrganizationRecord> queryResults = dslContext
+                .selectFrom(ORGANIZATION)
+                .where(ORGANIZATION.NAME.contains(organizationName))
+                .orderBy(ORGANIZATION.ID)
+                .limit(5)
+                .offset(page * 5)
+                .fetchInto(OrganizationRecord.class);
+
+        for (OrganizationRecord record : queryResults) {
+            Organization organization = convertQueryResultToModelObject(record);
+            organizationsEntries.add(organization);
+        }
+
+        return organizationsEntries;
+    }
 
     @Override
     @Transactional
