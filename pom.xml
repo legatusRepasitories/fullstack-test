@@ -1,58 +1,272 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.4.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>ru.it.pro</groupId>
-	<artifactId>fullstack-test</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>fullstack-test</name>
-	<description>Test project for ProIT</description>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.4.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>ru.it.pro</groupId>
+    <artifactId>fullstack-test</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>fullstack-test</name>
+    <description>Test project for ProIT</description>
 
-	<properties>
-		<java.version>11</java.version>
-	</properties>
+    <properties>
+        <java.version>11</java.version>
+        <skip.db.creation>true</skip.db.creation>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jooq</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jooq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.4.1212</version>
+            <scope>runtime</scope>
+        </dependency>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- Read properties -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <id>read</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>src/main/resources/application.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+
+                <!-- Skip DB creation if the value of the skip.db.creation property is true -->
+                <configuration>
+                    <skip>${skip.db.creation}</skip>
+                </configuration>
+
+                <executions>
+                    <!-- Execute SQL statements to the configured database -->
+                    <execution>
+                        <id>create-populate-database</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Configure the database connection -->
+                            <driver>${spring.datasource.driver-class-name}</driver>
+                            <url>${spring.datasource.url}</url>
+                            <username>${spring.datasource.username}</username>
+                            <password>${spring.datasource.password}</password>
+
+                            <!-- Ensure that our changes are committed automatically -->
+                            <autocommit>true</autocommit>
+                            <!-- Configure the location of the invoked SQL script -->
+                            <srcFiles>
+                                <srcFile>src/main/resources/db/migration/V1__createTables.sql</srcFile>
+                                <srcFile>src/main/resources/db/migration/V2__populateTables.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>9.4.1212</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <!--            <plugin>-->
+            <!--                <groupId>org.flywaydb</groupId>-->
+            <!--                <artifactId>flyway-maven-plugin</artifactId>-->
+
+            <!--                &lt;!&ndash; Note that we're executing the Flyway plugin in the "generate-sources"-->
+            <!--                  phase &ndash;&gt;-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <phase>generate-sources</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>migrate</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+
+            <!--                &lt;!&ndash; Note that we need to prefix the db/migration path with filesystem:-->
+            <!--                  to prevent Flyway from looking for our migration scripts only on the classpath &ndash;&gt;-->
+            <!--                <configuration>-->
+            <!--                    <driver>${spring.datasource.driver-class-name}</driver>-->
+            <!--                    <url>${spring.datasource.url}</url>-->
+            <!--                    <user>${spring.datasource.username}</user>-->
+            <!--                    <password>${spring.datasource.password}</password>-->
+            <!--                    <locations>-->
+            <!--                        <location>filesystem:src/main/resources/db/migration</location>-->
+            <!--                    </locations>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
+
+
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.11.4</version>
+
+                <executions>
+                    <!-- Generate the required class from the database -->
+                    <execution>
+                        <id>generate-postgres</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <dependencies>
+
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>9.4.1212</version>
+                    </dependency>
+                </dependencies>
+
+                <configuration>
+                    <!-- Configure the database connection -->
+                    <jdbc>
+                        <driver>${spring.datasource.driver-class-name}</driver>
+                        <url>${spring.datasource.url}</url>
+                        <user>${spring.datasource.username}</user>
+                        <password>${spring.datasource.password}</password>
+                    </jdbc>
+
+                    <generator>
+                        <database>
+                            <!-- Include all tables found from the PUBLIC schema -->
+                            <includes>.*</includes>
+                            <excludes></excludes>
+<!--                            <inputCatalog>public</inputCatalog>-->
+                            <inputSchema>public</inputSchema>
+                        </database>
+                        <!-- Generate classes for tables and records -->
+                        <generate>
+                            <records>true</records>
+                        </generate>
+                        <!-- Configure the target package and directory -->
+                        <target>
+                            <packageName>ru.it.pro.fullstacktest.jooq.db</packageName>
+                            <directory>target/generated-sources/jooq</directory>
+                        </target>
+                    </generator>
+                </configuration>
+            </plugin>
+
+
+            <!-- Generate classes from tables -->
+            <!--            <plugin>-->
+            <!--                <groupId>org.jooq</groupId>-->
+            <!--                <artifactId>jooq-codegen-maven</artifactId>-->
+            <!--                <version>3.11.4</version>-->
+
+            <!--                &lt;!&ndash; The plugin should hook into the generate goal &ndash;&gt;-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <goals>-->
+            <!--                            <goal>generate</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+
+            <!--                &lt;!&ndash; Manage the plugin's dependency. In this example, we'll use a PostgreSQL database &ndash;&gt;-->
+            <!--                <dependencies>-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>org.postgresql</groupId>-->
+            <!--                        <artifactId>postgresql</artifactId>-->
+            <!--                        <version>9.4.1212</version>-->
+            <!--                    </dependency>-->
+            <!--                </dependencies>-->
+
+            <!--                &lt;!&ndash; Specify the plugin configuration.-->
+            <!--                     The configuration format is the same as for the standalone code generator &ndash;&gt;-->
+            <!--                <configuration>-->
+
+            <!--                    &lt;!&ndash; JDBC connection parameters &ndash;&gt;-->
+            <!--                    <jdbc>-->
+            <!--                        <driver>${spring.datasource.driver-class-name}</driver>-->
+            <!--                        <url>${spring.datasource.url}</url>-->
+            <!--                        <user>${spring.datasource.username}</user>-->
+            <!--                        <password>${spring.datasource.password}</password>-->
+            <!--                    </jdbc>-->
+
+            <!--                    &lt;!&ndash; Generator parameters &ndash;&gt;-->
+            <!--                    <generator>-->
+            <!--                        <database>-->
+            <!--                            <includes>.*</includes>-->
+            <!--                            <excludes></excludes>-->
+            <!--                            &lt;!&ndash; In case your database supports catalogs, e.g. SQL Server:-->
+            <!--                            <inputCatalog>public</inputCatalog>-->
+            <!--                              &ndash;&gt;-->
+            <!--                            <inputSchema>public</inputSchema>-->
+            <!--                        </database>-->
+            <!--                        <target>-->
+            <!--                            <packageName>ru.it.pro.fullstacktest.jooq.db</packageName>-->
+            <!--                            <directory>target/generated-sources/jooq</directory>-->
+            <!--                        </target>-->
+            <!--                    </generator>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
+
+        </plugins>
+
+    </build>
 
 </project>
