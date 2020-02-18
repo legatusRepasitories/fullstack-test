@@ -56,6 +56,18 @@ public class OrganizationService {
     }
 
     public Organization delete(Integer id) {
-        return dao.delete(id);
+        List<Organization> affiliatedOrganizations = dao.findAffiliatedOrganizations(id);
+
+        if (affiliatedOrganizations.isEmpty()) {
+            System.out.println("can delete");
+            return dao.delete(id);
+        }
+        else {
+            System.out.println("can't delete");
+            return null;
+        }
     }
+
+
+
 }
