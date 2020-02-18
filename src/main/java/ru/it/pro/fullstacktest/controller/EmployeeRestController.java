@@ -26,4 +26,9 @@ public class EmployeeRestController {
         return employeeService.findById(id);
     }
 
+    @PutMapping
+    public Employee update(@RequestBody Employee employee) {
+        return employeeService.update(employee);
+    }
+
 }

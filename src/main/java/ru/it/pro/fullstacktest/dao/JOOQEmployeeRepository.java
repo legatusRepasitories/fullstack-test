@@ -38,4 +38,13 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
 
         return record == null ? null : record.into(Employee.class);
     }
+
+    @Override
+    @Transactional
+    public Employee update(Employee employee) {
+        EmployeeRecord record = dslContext.newRecord(EMPLOYEE, employee);
+        dslContext.executeUpdate(record);
+
+        return record.into(Employee.class);
+    }
 }

@@ -7,4 +7,6 @@ public interface EmployeeRepository {
     Employee add(Employee employee);
 
     Employee findById(Integer id);
+
+    Employee update(Employee employee);
 }
