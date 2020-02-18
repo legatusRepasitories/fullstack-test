@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/organizations")
+@RequestMapping("/api/organization")
 public class OrganizationRestController {
 
     private OrganizationService organizationService;
@@ -27,18 +27,31 @@ public class OrganizationRestController {
         return organizationService.add(organization);
     }
 
-//    @GetMapping(value = "/list")
-//    public List<Organization> findAll() {
-//        return organizationService.findAll();
-//    }
 
+    //offset pagination is bad https://blog.jooq.org/tag/offset-pagination/
     @GetMapping(value = "/list")
-    public List<Organization> findPageOfOrganizations(
+    public List<Organization> findPageOfOrganizationsOffset(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(value = "name", required = false) String organizationName) {
-        
+
         return organizationService.findPageOfOrganizations(page, organizationName);
     }
+
+    //TODO: keySet pagination
+    @GetMapping(value = "/keySet")
+    public List<Organization> findPageOfOrganizationsKeySet(
+            @RequestParam(defaultValue = "0") Integer lastId,
+            @RequestParam(value = "name", required = false) String organizationName) {
+
+        return organizationService.findPageOfOrganizationsKeySet(lastId, organizationName);
+    }
+
+    @GetMapping(value = "/tree")
+    public List<Organization> findOrganizationsBases() {
+
+        return organizationService.findOrganizationsBases();
+    }
+
 
     @GetMapping(path = "/{id}")
     public Organization findOrganizationById(@PathVariable Integer id) {
@@ -49,6 +62,11 @@ public class OrganizationRestController {
     public Organization findOrganizationByName(@PathVariable String name) {
         return organizationService.findByName(name);
 
+    }
+
+    @GetMapping(path = "/{id}/child")
+    public List<Organization> findAffiliatedOrganizations(@PathVariable Integer id) {
+        return organizationService.findAffiliatedOrganizations(id);
     }
 
     @DeleteMapping(path = "/{id}")
