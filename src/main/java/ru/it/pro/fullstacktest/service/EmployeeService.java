@@ -19,6 +19,13 @@ public class EmployeeService {
     }
 
     public Employee add(Employee employee) {
+        if (employee.getChiefId() != null) {
+            
+            Employee chief = repository.findById(employee.getChiefId());
+            if (!chief.getOrganizationId().equals(employee.getOrganizationId())) {
+                return null;
+            }
+        }
         return repository.add(employee);
     }
 
