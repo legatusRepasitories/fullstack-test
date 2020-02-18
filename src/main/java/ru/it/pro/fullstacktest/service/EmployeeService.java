@@ -28,8 +28,10 @@ public class EmployeeService {
         return repository.findById(id);
     }
 
-    public Object findPageOfEmployees(Integer page) {
-        return repository.findPageOfEmployees(page);
+    public Object findPageOfEmployees(Integer page, String name) {
+
+        return name == null ?
+                repository.findPageOfEmployees(page) : repository.findPageOfEmployeesWithNameLike(page, name);
     }
 
     public Employee update(Employee employee) {

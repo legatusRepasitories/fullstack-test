@@ -12,6 +12,8 @@ public interface EmployeeRepository {
 
     Object findPageOfEmployees(Integer page);
 
+    Object findPageOfEmployeesWithNameLike(Integer page, String name);
+
     Employee update(Employee employee);
 
     List<Employee> findChiefWorkers(Integer id);

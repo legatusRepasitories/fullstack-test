@@ -36,9 +36,8 @@ public class EmployeeRestController {
     @GetMapping(path = "/list")
     public Object findPageOfEmployees(@RequestParam(defaultValue = "0") Integer page,
                                       @RequestParam(required = false) String name) {
-        System.out.println(page);
-        System.out.println(name);
-        return employeeService.findPageOfEmployees(page);
+
+        return employeeService.findPageOfEmployees(page, name);
     }
 
     @PutMapping

@@ -52,6 +52,17 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Object findPageOfEmployeesWithNameLike(Integer page, String name) {
+        return dslContext.selectFrom(EMPLOYEE)
+                .where(EMPLOYEE.NAME.contains(name))
+                .orderBy(EMPLOYEE.ID)
+                .limit(5)
+                .offset(page * 5)
+                .fetchInto(Employee.class);
+    }
+
+    @Override
     @Transactional
     public Employee update(Employee employee) {
         EmployeeRecord record = dslContext.newRecord(EMPLOYEE, employee);
