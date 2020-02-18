@@ -28,6 +28,10 @@ public class EmployeeService {
         return repository.findById(id);
     }
 
+    public Object findPageOfEmployees(Integer page) {
+        return repository.findPageOfEmployees(page);
+    }
+
     public Employee update(Employee employee) {
         return isChiefAbsentOrInSameOrganization(employee) ? repository.update(employee) : null;
     }

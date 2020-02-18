@@ -33,6 +33,14 @@ public class EmployeeRestController {
         return employeeService.findChiefWorkers(id);
     }
 
+    @GetMapping(path = "/list")
+    public Object findPageOfEmployees(@RequestParam(defaultValue = "0") Integer page,
+                                      @RequestParam(required = false) String name) {
+        System.out.println(page);
+        System.out.println(name);
+        return employeeService.findPageOfEmployees(page);
+    }
+
     @PutMapping
     public Employee update(@RequestBody Employee employee) {
         return employeeService.update(employee);
