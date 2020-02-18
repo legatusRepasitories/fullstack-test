@@ -16,7 +16,9 @@ public interface EmployeeRepository {
 
     Employee update(Employee employee);
 
-    List<Employee> findChiefWorkers(Integer id);
+    List<Employee> findEmployeeWorkers(Integer id);
+
+    List<Employee> findEmployeesWithoutChief();
 
     Employee delete(Integer id);
 }

@@ -3,12 +3,9 @@ package ru.it.pro.fullstacktest.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.it.pro.fullstacktest.dao.EmployeeRepository;
-import ru.it.pro.fullstacktest.jooq.db.tables.records.EmployeeRecord;
 import ru.it.pro.fullstacktest.model.Employee;
 
 import java.util.List;
-
-import static ru.it.pro.fullstacktest.jooq.db.tables.Employee.EMPLOYEE;
 
 @Service
 public class EmployeeService {
@@ -39,11 +36,15 @@ public class EmployeeService {
     }
 
     public List<Employee> findChiefWorkers(Integer id) {
-        return repository.findChiefWorkers(id);
+        return repository.findEmployeeWorkers(id);
+    }
+
+    public List<Employee> findEmployeesWithoutChief() {
+        return repository.findEmployeesWithoutChief();
     }
 
     public Employee delete(Integer id) {
-        if (!repository.findChiefWorkers(id).isEmpty()) return null;
+        if (!repository.findEmployeeWorkers(id).isEmpty()) return null;
 
         return repository.delete(id);
     }

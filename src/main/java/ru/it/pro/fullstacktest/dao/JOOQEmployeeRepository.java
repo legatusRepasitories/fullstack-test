@@ -73,11 +73,19 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Employee> findChiefWorkers(Integer id) {
+    public List<Employee> findEmployeeWorkers(Integer id) {
         return dslContext.selectFrom(EMPLOYEE)
                 .where(EMPLOYEE.CHIEF_ID.eq(id))
                 .fetchInto(Employee.class);
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Employee> findEmployeesWithoutChief() {
+        return dslContext.selectFrom(EMPLOYEE)
+                .where(EMPLOYEE.CHIEF_ID.isNull())
+                .fetchInto(Employee.class);
     }
 
     @Override

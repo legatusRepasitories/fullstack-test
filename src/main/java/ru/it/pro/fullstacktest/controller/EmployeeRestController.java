@@ -33,6 +33,11 @@ public class EmployeeRestController {
         return employeeService.findChiefWorkers(id);
     }
 
+    @GetMapping(path = "/tree")
+    public List<Employee> findEmployeesWithoutChief() {
+        return employeeService.findEmployeesWithoutChief();
+    }
+
     @GetMapping(path = "/list")
     public Object findPageOfEmployees(@RequestParam(defaultValue = "0") Integer page,
                                       @RequestParam(required = false) String name) {
