@@ -21,4 +21,12 @@ public interface OrganizationRepository {
     List<Organization> findPageOfOrganizations(int page);
 
     List<Organization> findPageOfOrganizationsWithNameLike(int page, String organizationName);
+
+    List<Organization> findPageOfOrganizationsKeySet(Integer lastId);
+
+    List<Organization> findPageOfOrganizationsKeySetWithNameLike(Integer lastId, String organizationName);
+
+    List<Organization> findOrganizationsBases();
+
+    List<Organization> findAffiliatedOrganizations(Integer id);
 }

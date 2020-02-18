@@ -37,8 +37,8 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
         persisted.setName(organizationEntry.getName());
         persisted.setHeadOrganizationId(organizationEntry.getHeadOrganizationId());
         persisted.store();
-
-        return convertQueryResultToModelObject(persisted);
+        
+        return persisted.into(Organization.class);
     }
 
 
@@ -49,7 +49,7 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
                 .where(ORGANIZATION.NAME.equal(name))
                 .fetchOne();
 
-        return record == null ? null : convertQueryResultToModelObject(record);
+        return record == null ? null : record.into(Organization.class);
     }
 
 
@@ -60,7 +60,18 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
                 .where(ORGANIZATION.ID.equal(id))
                 .fetchOne();
 
-        return record == null ? null : convertQueryResultToModelObject(record);
+        return record == null ? null : record.into(Organization.class);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Organization> findAffiliatedOrganizations(Integer id) {
+
+        return dslContext
+                .selectFrom(ORGANIZATION)
+                .where(ORGANIZATION.HEAD_ORGANIZATION_ID.eq(id))
+                .fetchInto(Organization.class);
+
     }
 
     @Override
@@ -68,55 +79,73 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
     public List<Organization> findAll() {
         List<Organization> organizationsEntries = new ArrayList<>();
 
-        List<OrganizationRecord> queryResults = dslContext.selectFrom(ORGANIZATION).fetchInto(OrganizationRecord.class);
+        return dslContext.selectFrom(ORGANIZATION).fetchInto(Organization.class);
 
-        for (OrganizationRecord record : queryResults) {
-            Organization organization = convertQueryResultToModelObject(record);
-            organizationsEntries.add(organization);
-        }
-
-        return organizationsEntries;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Organization> findPageOfOrganizations(int page) {
 
-        List<Organization> organizationsEntries = new ArrayList<>();
-
-        List<OrganizationRecord> queryResults = dslContext
+        return dslContext
                 .selectFrom(ORGANIZATION)
                 .orderBy(ORGANIZATION.ID)
                 .limit(5)
                 .offset(page * 5)
-                .fetchInto(OrganizationRecord.class);
+                .fetchInto(Organization.class);
 
-        for (OrganizationRecord record : queryResults) {
-            Organization organization = convertQueryResultToModelObject(record);
-            organizationsEntries.add(organization);
-        }
-
-        return organizationsEntries;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Organization> findPageOfOrganizationsWithNameLike(int page, String organizationName) {
-        List<Organization> organizationsEntries = new ArrayList<>();
 
-        List<OrganizationRecord> queryResults = dslContext
+        return dslContext
                 .selectFrom(ORGANIZATION)
                 .where(ORGANIZATION.NAME.contains(organizationName))
                 .orderBy(ORGANIZATION.ID)
                 .limit(5)
                 .offset(page * 5)
-                .fetchInto(OrganizationRecord.class);
+                .fetchInto(Organization.class);
 
-        for (OrganizationRecord record : queryResults) {
-            Organization organization = convertQueryResultToModelObject(record);
-            organizationsEntries.add(organization);
-        }
+    }
 
-        return organizationsEntries;
+    @Override
+    @Transactional(readOnly = true)
+    public List<Organization> findPageOfOrganizationsKeySet(Integer lastId) {
+
+        return dslContext
+                .selectFrom(ORGANIZATION)
+                .orderBy(ORGANIZATION.ID)
+                .seek(lastId)
+                .limit(5)
+                .fetchInto(Organization.class);
+
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Organization> findPageOfOrganizationsKeySetWithNameLike(Integer lastId, String organizationName) {
+
+        return dslContext
+                .selectFrom(ORGANIZATION)
+                .where(ORGANIZATION.NAME.contains(organizationName))
+                .orderBy(ORGANIZATION.ID)
+                .seek(lastId)
+                .limit(5)
+                .fetchInto(Organization.class);
+
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Organization> findOrganizationsBases() {
+
+        return dslContext
+                .selectFrom(ORGANIZATION)
+                .where(ORGANIZATION.HEAD_ORGANIZATION_ID.isNull())
+                .fetchInto(Organization.class);
+
     }
 
     @Override
@@ -137,7 +166,7 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
 
         dslContext.executeUpdate(updateRecord);
 
-        return findById(entry.getId());
+        return updateRecord.into(Organization.class);
     }
 
 
@@ -151,20 +180,5 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
                 .execute();
 
         return deleted;
-    }
-
-
-//    private OrganizationRecord createRecord(Organization organizationEntry) {
-//
-//        OrganizationRecord record = new OrganizationRecord();
-//        record.setName(organizationEntry.getName());
-//        record.setHeadOrganizationId(organizationEntry.getHeadOrganizationId());
-//
-//        return record;
-//    }
-
-
-    private Organization convertQueryResultToModelObject(OrganizationRecord queryResult) {
-        return new Organization(queryResult.getId(), queryResult.getName(), queryResult.getHeadOrganizationId());
     }
 }
