@@ -40,9 +40,9 @@ public class EmployeeRestController {
 
     @GetMapping(path = "/list")
     public Object findPageOfEmployees(@RequestParam(defaultValue = "0") Integer page,
-                                      @RequestParam(required = false) String name) {
+                                      @RequestParam(defaultValue = "") String name) {
 
-        return employeeService.findPageOfEmployees(page, name);
+        return employeeService.findPageOfEmployees(page, name.strip());
     }
 
     @PutMapping

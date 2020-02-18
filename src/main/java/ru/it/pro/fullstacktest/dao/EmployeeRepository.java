@@ -10,8 +10,6 @@ public interface EmployeeRepository {
 
     Employee findById(Integer id);
 
-    Object findPageOfEmployees(Integer page);
-
     Object findPageOfEmployeesWithNameLike(Integer page, String name);
 
     Employee update(Employee employee);

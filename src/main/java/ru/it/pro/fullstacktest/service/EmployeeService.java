@@ -27,8 +27,7 @@ public class EmployeeService {
 
     public Object findPageOfEmployees(Integer page, String name) {
 
-        return name == null ?
-                repository.findPageOfEmployees(page) : repository.findPageOfEmployeesWithNameLike(page, name);
+        return repository.findPageOfEmployeesWithNameLike(page, name);
     }
 
     public Employee update(Employee employee) {
