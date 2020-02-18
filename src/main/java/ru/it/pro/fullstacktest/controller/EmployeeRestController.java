@@ -37,5 +37,9 @@ public class EmployeeRestController {
     public Employee update(@RequestBody Employee employee) {
         return employeeService.update(employee);
     }
-    
+
+    @DeleteMapping(path = "/{id}")
+    public Employee delete(@PathVariable Integer id) {
+        return employeeService.delete(id);
+    }
 }

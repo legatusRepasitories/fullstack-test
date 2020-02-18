@@ -36,6 +36,12 @@ public class EmployeeService {
         return repository.findChiefWorkers(id);
     }
 
+    public Employee delete(Integer id) {
+        if (!repository.findChiefWorkers(id).isEmpty()) return null;
+
+        return repository.delete(id);
+    }
+
     private boolean isChiefAbsentOrInSameOrganization(Employee employee) {
         if (employee.getChiefId() == null) return true;
 

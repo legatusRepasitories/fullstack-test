@@ -58,4 +58,17 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
                 .fetchInto(Employee.class);
 
     }
+
+    @Override
+    @Transactional
+    public Employee delete(Integer id) {
+
+        Employee record = findById(id);
+        dslContext.deleteFrom(EMPLOYEE)
+                .where(EMPLOYEE.ID.eq(id))
+                .execute();
+
+        return record;
+
+    }
 }
