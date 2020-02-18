@@ -30,7 +30,14 @@ public class OrganizationService {
                 dao.findPageOfOrganizations(page) : dao.findPageOfOrganizationsWithNameLike(page, organizationName);
     }
 
+    public List<Organization> findPageOfOrganizationsKeySet(Integer lastId, String organizationName) {
+        return organizationName == null ?
+                dao.findPageOfOrganizationsKeySet(lastId) : dao.findPageOfOrganizationsKeySetWithNameLike(lastId, organizationName);
+    }
 
+    public List<Organization> findOrganizationsBases() {
+        return dao.findOrganizationsBases();
+    }
 
     public Organization findById(Integer id) {
         return dao.findById(id);
@@ -38,6 +45,10 @@ public class OrganizationService {
 
     public Organization findByName(String name) {
         return dao.findByName(name);
+    }
+
+    public List<Organization> findAffiliatedOrganizations(Integer id) {
+        return dao.findAffiliatedOrganizations(id);
     }
 
     public Organization update(Organization organization) {
