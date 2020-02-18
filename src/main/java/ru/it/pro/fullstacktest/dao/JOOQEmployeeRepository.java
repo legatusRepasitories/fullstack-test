@@ -3,6 +3,7 @@ package ru.it.pro.fullstacktest.dao;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.it.pro.fullstacktest.jooq.db.tables.records.EmployeeRecord;
 import ru.it.pro.fullstacktest.model.Employee;
 
@@ -19,11 +20,22 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
+    @Transactional
     public Employee add(Employee employee) {
 
         EmployeeRecord record = dslContext.newRecord(EMPLOYEE, employee);
         record.store();
 
         return record.into(Employee.class);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Employee findById(Integer id) {
+        EmployeeRecord record = dslContext.selectFrom(EMPLOYEE)
+                .where(EMPLOYEE.ID.eq(id))
+                .fetchOne();
+
+        return record == null ? null : record.into(Employee.class);
     }
 }
