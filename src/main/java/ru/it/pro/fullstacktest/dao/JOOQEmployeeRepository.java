@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.it.pro.fullstacktest.jooq.db.tables.records.EmployeeRecord;
 import ru.it.pro.fullstacktest.model.Employee;
 
+import java.util.List;
+
 import static ru.it.pro.fullstacktest.jooq.db.tables.Employee.EMPLOYEE;
 
 @Component
@@ -46,5 +48,14 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
         dslContext.executeUpdate(record);
 
         return record.into(Employee.class);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Employee> findChiefWorkers(Integer id) {
+        return dslContext.selectFrom(EMPLOYEE)
+                .where(EMPLOYEE.CHIEF_ID.eq(id))
+                .fetchInto(Employee.class);
+
     }
 }

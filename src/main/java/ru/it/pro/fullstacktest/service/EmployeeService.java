@@ -6,6 +6,8 @@ import ru.it.pro.fullstacktest.dao.EmployeeRepository;
 import ru.it.pro.fullstacktest.jooq.db.tables.records.EmployeeRecord;
 import ru.it.pro.fullstacktest.model.Employee;
 
+import java.util.List;
+
 import static ru.it.pro.fullstacktest.jooq.db.tables.Employee.EMPLOYEE;
 
 @Service
@@ -28,6 +30,10 @@ public class EmployeeService {
 
     public Employee update(Employee employee) {
         return isChiefAbsentOrInSameOrganization(employee) ? repository.update(employee) : null;
+    }
+
+    public List<Employee> findChiefWorkers(Integer id) {
+        return repository.findChiefWorkers(id);
     }
 
     private boolean isChiefAbsentOrInSameOrganization(Employee employee) {
