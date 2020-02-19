@@ -25,12 +25,12 @@ public class OrganizationService {
         return dao.findAll();
     }
 
-    public List<Organization> findPageOfOrganizations(int page, String organizationName) {
-        return organizationName == null ?
-                dao.findPageOfOrganizations(page) : dao.findPageOfOrganizationsWithNameLike(page, organizationName);
+    public Object findPageOfOrganizations(int page, String organizationName) {
+        return dao.findPageOfOrganizationsWithNameLike(page, organizationName);
     }
 
-    public List<Organization> findPageOfOrganizationsKeySet(Integer lastId, String organizationName) {
+    //TODO later
+    public Object findPageOfOrganizationsKeySet(Integer lastId, String organizationName) {
         return organizationName == null ?
                 dao.findPageOfOrganizationsKeySet(lastId) : dao.findPageOfOrganizationsKeySetWithNameLike(lastId, organizationName);
     }

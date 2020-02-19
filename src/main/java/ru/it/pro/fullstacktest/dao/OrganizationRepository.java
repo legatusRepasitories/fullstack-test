@@ -18,9 +18,7 @@ public interface OrganizationRepository {
 
     List<Organization> findAll();
 
-    List<Organization> findPageOfOrganizations(int page);
-
-    List<Organization> findPageOfOrganizationsWithNameLike(int page, String organizationName);
+    Object findPageOfOrganizationsWithNameLike(int page, String organizationName);
 
     List<Organization> findPageOfOrganizationsKeySet(Integer lastId);
 

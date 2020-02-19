@@ -30,18 +30,18 @@ public class OrganizationRestController {
 
     //offset pagination is bad https://blog.jooq.org/tag/offset-pagination/
     @GetMapping(value = "/list")
-    public List<Organization> findPageOfOrganizationsOffset(
+    public Object findPageOfOrganizationsOffset(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(value = "name", required = false) String organizationName) {
+            @RequestParam(value = "name", defaultValue = "") String organizationName) {
 
         return organizationService.findPageOfOrganizations(page, organizationName);
     }
 
     //TODO: keySet pagination
     @GetMapping(value = "/keySet")
-    public List<Organization> findPageOfOrganizationsKeySet(
+    public Object findPageOfOrganizationsKeySet(
             @RequestParam(defaultValue = "0") Integer lastId,
-            @RequestParam(value = "name", required = false) String organizationName) {
+            @RequestParam(value = "name", defaultValue = "") String organizationName) {
 
         return organizationService.findPageOfOrganizationsKeySet(lastId, organizationName);
     }

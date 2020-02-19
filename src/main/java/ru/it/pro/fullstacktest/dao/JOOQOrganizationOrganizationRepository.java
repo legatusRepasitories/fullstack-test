@@ -1,5 +1,6 @@
 package ru.it.pro.fullstacktest.dao;
 
+import org.jooq.AggregateFunction;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,10 @@ import ru.it.pro.fullstacktest.model.Organization;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.jooq.JSONFormat.DEFAULT_FOR_RECORDS;
+import static org.jooq.JSONFormat.RecordFormat.OBJECT;
+import static org.jooq.impl.DSL.count;
+import static ru.it.pro.fullstacktest.jooq.db.tables.Employee.EMPLOYEE;
 import static ru.it.pro.fullstacktest.jooq.db.tables.Organization.ORGANIZATION;
 
 
@@ -85,28 +90,18 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
 
     @Override
     @Transactional(readOnly = true)
-    public List<Organization> findPageOfOrganizations(int page) {
+    public Object findPageOfOrganizationsWithNameLike(int page, String organizationName) {
 
-        return dslContext
-                .selectFrom(ORGANIZATION)
-                .orderBy(ORGANIZATION.ID)
-                .limit(5)
-                .offset(page * 5)
-                .fetchInto(Organization.class);
 
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Organization> findPageOfOrganizationsWithNameLike(int page, String organizationName) {
-
-        return dslContext
-                .selectFrom(ORGANIZATION)
+        return dslContext.select(ORGANIZATION.ID.as("id"), ORGANIZATION.NAME.as("name"), count(EMPLOYEE.ID).as("employeeCount"))
+                .from(ORGANIZATION)
+                .join(EMPLOYEE).on(EMPLOYEE.ORGANIZATION_ID.eq(ORGANIZATION.ID))
                 .where(ORGANIZATION.NAME.contains(organizationName))
+                .groupBy(ORGANIZATION.ID)
                 .orderBy(ORGANIZATION.ID)
                 .limit(5)
                 .offset(page * 5)
-                .fetchInto(Organization.class);
+                .fetch().formatJSON(DEFAULT_FOR_RECORDS.recordFormat(OBJECT));
 
     }
 
