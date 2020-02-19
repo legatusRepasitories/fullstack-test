@@ -1,5 +1,8 @@
 package ru.it.pro.fullstacktest.dao;
 
+import org.jooq.Record3;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.it.pro.fullstacktest.model.Organization;
 
 import java.util.List;
@@ -19,6 +22,8 @@ public interface OrganizationRepository {
     List<Organization> findAll();
 
     Object findPageOfOrganizationsWithNameLike(int page, String organizationName);
+
+    Page<Record3<Integer, String, Integer>> findPageOfOrganizationsWithNameLike(String organizationName, Pageable pageable);
 
     List<Organization> findPageOfOrganizationsKeySet(Integer lastId);
 

@@ -1,6 +1,9 @@
 package ru.it.pro.fullstacktest.service;
 
+import org.jooq.Record3;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.it.pro.fullstacktest.dao.OrganizationRepository;
 import ru.it.pro.fullstacktest.model.Organization;
@@ -27,6 +30,10 @@ public class OrganizationService {
 
     public Object findPageOfOrganizations(int page, String organizationName) {
         return dao.findPageOfOrganizationsWithNameLike(page, organizationName);
+    }
+
+    public Page<Record3<Integer, String, Integer>> findPageOfOrganizations(String organizationName, Pageable pageable) {
+        return dao.findPageOfOrganizationsWithNameLike(organizationName, pageable);
     }
 
     //TODO later

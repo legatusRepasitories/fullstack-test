@@ -2,7 +2,11 @@ package ru.it.pro.fullstacktest.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSONFormat;
+import org.jooq.Record3;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import ru.it.pro.fullstacktest.jooq.db.tables.records.OrganizationRecord;
 import ru.it.pro.fullstacktest.model.Organization;
@@ -35,6 +39,15 @@ public class OrganizationRestController {
             @RequestParam(value = "name", defaultValue = "") String organizationName) {
 
         return organizationService.findPageOfOrganizations(page, organizationName);
+    }
+
+    @GetMapping(value = "/springList")
+    public Page<Record3<Integer, String, Integer>> findPageOfOrganizationsOffset(
+            @RequestParam(value = "name", defaultValue = "") String organizationName,
+            @PageableDefault(size = 5) Pageable pageable) {
+
+
+        return organizationService.findPageOfOrganizations(organizationName, pageable);
     }
 
     //TODO: keySet pagination

@@ -1,20 +1,36 @@
 package ru.it.pro.fullstacktest.dao;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.jooq.AggregateFunction;
 import org.jooq.DSLContext;
+import org.jooq.Record3;
+import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.it.pro.fullstacktest.jooq.db.tables.records.OrganizationRecord;
+import ru.it.pro.fullstacktest.model.Employee;
 import ru.it.pro.fullstacktest.model.Organization;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.jooq.JSONFormat.DEFAULT_FOR_RECORDS;
 import static org.jooq.JSONFormat.RecordFormat.OBJECT;
 import static org.jooq.impl.DSL.count;
+import static org.jooq.impl.DSL.name;
 import static ru.it.pro.fullstacktest.jooq.db.tables.Employee.EMPLOYEE;
 import static ru.it.pro.fullstacktest.jooq.db.tables.Organization.ORGANIZATION;
 
@@ -23,6 +39,9 @@ import static ru.it.pro.fullstacktest.jooq.db.tables.Organization.ORGANIZATION;
 public class JOOQOrganizationOrganizationRepository implements OrganizationRepository {
 
     DSLContext dslContext;
+
+    @Autowired
+    ObjectMapper mapper;
 
     @Autowired
     public JOOQOrganizationOrganizationRepository(DSLContext dslContext) {
@@ -42,7 +61,7 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
         persisted.setName(organizationEntry.getName());
         persisted.setHeadOrganizationId(organizationEntry.getHeadOrganizationId());
         persisted.store();
-        
+
         return persisted.into(Organization.class);
     }
 
@@ -104,6 +123,39 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
                 .fetch().formatJSON(DEFAULT_FOR_RECORDS.recordFormat(OBJECT));
 
     }
+
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Record3<Integer, String, Integer>> findPageOfOrganizationsWithNameLike(String organizationName, Pageable pageable) {
+
+        Result<Record3<Integer, String, Integer>> organizations =
+        dslContext
+                .select(ORGANIZATION.ID.as("id"), ORGANIZATION.NAME.as("name"), count(EMPLOYEE.ID).as("employeeCount"))
+                .from(ORGANIZATION)
+                .leftJoin(EMPLOYEE).on(EMPLOYEE.ORGANIZATION_ID.eq(ORGANIZATION.ID))
+                .where(ORGANIZATION.NAME.contains(organizationName))
+                .groupBy(ORGANIZATION.ID)
+                .orderBy(ORGANIZATION.ID)
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        long totalCount = findCountByContainsExpression(organizationName);
+
+        return new PageImpl<>(organizations, pageable, totalCount);
+
+    }
+
+
+    private long findCountByContainsExpression(String expression) {
+        return dslContext.fetchCount(
+                dslContext.selectFrom(ORGANIZATION)
+                        .where(ORGANIZATION.NAME.contains(expression))
+        );
+    }
+
 
     @Override
     @Transactional(readOnly = true)
