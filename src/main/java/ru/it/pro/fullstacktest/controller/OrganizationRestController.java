@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.it.pro.fullstacktest.jooq.db.tables.records.OrganizationRecord;
 import ru.it.pro.fullstacktest.model.Organization;
@@ -33,12 +34,12 @@ public class OrganizationRestController {
 
 
     //offset pagination is bad https://blog.jooq.org/tag/offset-pagination/
-    @GetMapping(value = "/list")
+    @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object findPageOfOrganizationsOffset(
-            @RequestParam(defaultValue = "0") Integer page,
+            @PageableDefault(size = 5) Pageable pageable,
             @RequestParam(value = "name", defaultValue = "") String organizationName) {
 
-        return organizationService.findPageOfOrganizations(page, organizationName);
+        return organizationService.findPageOfOrganizations(pageable, organizationName);
     }
 
     @GetMapping(value = "/springList")

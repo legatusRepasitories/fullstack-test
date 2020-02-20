@@ -21,7 +21,7 @@ public interface OrganizationRepository {
 
     List<Organization> findAll();
 
-    Object findPageOfOrganizationsWithNameLike(int page, String organizationName);
+    Object findPageOfOrganizationsWithNameLike(Pageable pageable, String organizationName);
 
     Page<Record3<Integer, String, Integer>> findPageOfOrganizationsWithNameLike(String organizationName, Pageable pageable);
 

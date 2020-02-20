@@ -1,6 +1,11 @@
 package ru.it.pro.fullstacktest.controller;
 
+import org.jooq.Record4;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.it.pro.fullstacktest.model.Employee;
 import ru.it.pro.fullstacktest.service.EmployeeService;
@@ -38,11 +43,17 @@ public class EmployeeRestController {
         return employeeService.findEmployeesWithoutChief();
     }
 
-    @GetMapping(path = "/list")
-    public Object findPageOfEmployees(@RequestParam(defaultValue = "0") Integer page,
+    @GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object findPageOfEmployees(@PageableDefault(size = 5) Pageable pageable,
                                       @RequestParam(defaultValue = "") String name) {
 
-        return employeeService.findPageOfEmployees(page, name.strip());
+        return employeeService.findPageOfEmployees(pageable, name.strip());
+    }
+
+    @GetMapping(path = "/springList")
+    public Page<Record4<Integer, String, String, String>> findPageOfOrganizationsWithNameLike(@RequestParam(defaultValue = "") String name,
+                                                                                              @PageableDefault(size = 5) Pageable pageable) {
+        return employeeService.findPageOfOrganizationsWithNameLike(name, pageable);
     }
 
     @PutMapping

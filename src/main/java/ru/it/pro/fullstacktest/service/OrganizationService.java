@@ -28,8 +28,8 @@ public class OrganizationService {
         return dao.findAll();
     }
 
-    public Object findPageOfOrganizations(int page, String organizationName) {
-        return dao.findPageOfOrganizationsWithNameLike(page, organizationName);
+    public Object findPageOfOrganizations(Pageable pageable, String organizationName) {
+        return dao.findPageOfOrganizationsWithNameLike(pageable, organizationName);
     }
 
     public Page<Record3<Integer, String, Integer>> findPageOfOrganizations(String organizationName, Pageable pageable) {

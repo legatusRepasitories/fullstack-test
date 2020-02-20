@@ -109,18 +109,29 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
 
     @Override
     @Transactional(readOnly = true)
-    public Object findPageOfOrganizationsWithNameLike(int page, String organizationName) {
+    public Object findPageOfOrganizationsWithNameLike(Pageable pageable, String organizationName) {
 
 
-        return dslContext.select(ORGANIZATION.ID.as("id"), ORGANIZATION.NAME.as("name"), count(EMPLOYEE.ID).as("employeeCount"))
+        String json = dslContext.select(ORGANIZATION.ID.as("id"), ORGANIZATION.NAME.as("name"), count(EMPLOYEE.ID).as("employeeCount"))
                 .from(ORGANIZATION)
-                .join(EMPLOYEE).on(EMPLOYEE.ORGANIZATION_ID.eq(ORGANIZATION.ID))
+                .leftJoin(EMPLOYEE).on(EMPLOYEE.ORGANIZATION_ID.eq(ORGANIZATION.ID))
                 .where(ORGANIZATION.NAME.contains(organizationName))
                 .groupBy(ORGANIZATION.ID)
                 .orderBy(ORGANIZATION.ID)
-                .limit(5)
-                .offset(page * 5)
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
                 .fetch().formatJSON(DEFAULT_FOR_RECORDS.recordFormat(OBJECT));
+
+        long totalCount = findCountByContainsExpression(organizationName);
+        int totalPages = (int) Math.ceil((double) totalCount/pageable.getPageSize());
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\"content\": [").append(json.substring(1, json.length() - 1))
+                .append("], \"number\": ").append(pageable.getPageNumber())
+                .append(",\"numberOfElements\": ").append(pageable.getPageSize())
+                .append(",\"totalElements\": ").append(totalCount)
+                .append(",\"totalPages\": ").append(totalPages)
+                .append("}");
+        return sb.toString();
 
     }
 

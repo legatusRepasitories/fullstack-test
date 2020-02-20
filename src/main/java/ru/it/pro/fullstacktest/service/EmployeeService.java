@@ -1,6 +1,9 @@
 package ru.it.pro.fullstacktest.service;
 
+import org.jooq.Record4;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.it.pro.fullstacktest.dao.EmployeeRepository;
 import ru.it.pro.fullstacktest.model.Employee;
@@ -25,10 +28,15 @@ public class EmployeeService {
         return repository.findById(id);
     }
 
-    public Object findPageOfEmployees(Integer page, String name) {
+    public Object findPageOfEmployees(Pageable pageable, String name) {
 
-        return repository.findPageOfEmployeesWithNameLike(page, name);
+        return repository.findPageOfEmployeesWithNameLike(pageable, name);
     }
+
+    public Page<Record4<Integer, String, String, String>> findPageOfOrganizationsWithNameLike(String name, Pageable pageable) {
+        return repository.findPageOfOrganizationsWithNameLike(name, pageable);
+    }
+
 
     public Employee update(Employee employee) {
         return isChiefAbsentOrInSameOrganization(employee) ? repository.update(employee) : null;
