@@ -1,0 +1,13 @@
+<script type="text/ng-template" id="tree">
+    <div ng-click='tree.loadChildElements(element)'>{{ element.name }}</div>
+    <ul ng-if="element.childs">
+        <li ng-repeat="element in element.childs" ng-include="'tree'">
+        </li>
+    </ul>
+</script>
+
+<ul>
+    <li ng-repeat="element in tree.elements" ng-include="'tree'"></li>
+</ul>
+
+

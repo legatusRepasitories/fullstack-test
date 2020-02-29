@@ -47,7 +47,7 @@ export default class OrganizationFormController {
         let organization = {
             id: this.isNew() ? null : this.id,
             name: this.name,
-            headOrganizationId: this.organization === undefined ? null : this.organization.id
+            headOrganizationId: this.organization === undefined || this.organization === null ? null : this.organization.id
         };
 
 

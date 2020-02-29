@@ -64,7 +64,7 @@ export default class EmployeeFormController {
             id: this.isNew() ? null : this.id,
             name: this.name,
             organizationId: this.organization.id,
-            chiefId: this.isNew() ? null : this.chief.id
+            chiefId: this.chief === undefined || this.chief === null ? null : this.chief.id
         };
 
         console.log(employee);
