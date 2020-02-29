@@ -33,7 +33,7 @@ public class EmployeeRestController {
         return employeeService.findById(id);
     }
 
-    @GetMapping(path = "/{id}/workers")
+    @GetMapping(path = "/{id}/child")
     public List<Employee> findChiefWorkers(@PathVariable Integer id) {
         return employeeService.findChiefWorkers(id);
     }
@@ -48,6 +48,11 @@ public class EmployeeRestController {
                                       @RequestParam(defaultValue = "") String name) {
 
         return employeeService.findPageOfEmployees(pageable, name.strip());
+    }
+
+    @GetMapping(path = "/organization/{id}")
+    public List<Employee> findEmployeeOfOrganization(@PathVariable Integer id) {
+        return employeeService.findEmployeeOfOrganization(id);
     }
 
     @GetMapping(path = "/springList")

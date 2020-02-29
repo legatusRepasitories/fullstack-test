@@ -23,5 +23,7 @@ public interface EmployeeRepository {
 
     List<Employee> findEmployeesWithoutChief();
 
+    List<Employee> findEmployeeOfOrganization(Integer id);
+
     Employee delete(Integer id);
 }

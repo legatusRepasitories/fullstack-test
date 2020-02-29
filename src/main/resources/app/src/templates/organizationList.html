@@ -1,0 +1,25 @@
+<input type='text' ng-model="organizationList.searchName">
+<button ng-click='organizationList.getOrganizations()'>Search</button><br>
+<a href="/organizationForm">Add Organization</a>
+<table class="table">
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>employee count</th>
+        <th>#</th>
+
+    </tr>
+    <tr ng-repeat="org in organizationList.organizations">
+
+        <td>{{org.id}}</td>
+        <td>{{org.name}}</td>
+        <td>{{org.employeeCount}}</td>
+        <td><a href=/organizationForm/{{org.id}}>edit</a> </td>
+    </tr>
+</table>
+
+<ul uib-pagination items-per-page="organizationList.pageSize"
+    total-items="organizationList.organizationsTotal"
+    ng-model="organizationList.currentPage"
+    ng-change="organizationList.getOrganizations()"></ul>
+

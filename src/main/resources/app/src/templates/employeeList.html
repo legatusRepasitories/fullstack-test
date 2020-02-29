@@ -1,0 +1,25 @@
+<input type='text' ng-model="employeeList.searchName">
+<button ng-click='employeeList.getEmployees()'>Search</button><br>
+<a href="/employeeForm">Add Employee</a>
+<table class="table">
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>chief name</th>
+        <th>organization name</th>
+        <th>#</th>
+    </tr>
+    <tr ng-repeat='emp in employeeList.employees'>
+        <td>{{emp.id}}</td>
+        <td>{{emp.name}}</td>
+        <td>{{emp.chiefName}}</td>
+        <td>{{emp.organizationName}}</td>
+        <td><a href=/employeeForm/{{emp.id}}>edit</a> </td>
+    </tr>
+</table>
+
+<ul uib-pagination items-per-page='employeeList.pageSize'
+    total-items="employeeList.employeesTotal"
+    ng-model="employeeList.currentPage"
+    ng-change="employeeList.getEmployees()"></ul>
+

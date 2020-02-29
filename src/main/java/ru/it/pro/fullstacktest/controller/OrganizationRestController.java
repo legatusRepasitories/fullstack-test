@@ -66,6 +66,11 @@ public class OrganizationRestController {
         return organizationService.findOrganizationsBases();
     }
 
+    @GetMapping(value = "/all")
+    public List<Organization> findAll() {
+        return organizationService.findAll();
+    }
+
 
     @GetMapping(path = "/{id}")
     public Organization findOrganizationById(@PathVariable Integer id) {

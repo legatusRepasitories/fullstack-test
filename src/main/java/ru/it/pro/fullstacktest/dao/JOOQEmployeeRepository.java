@@ -54,6 +54,14 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
+    public List<Employee> findEmployeeOfOrganization(Integer id) {
+        List<Employee> employees = dslContext.selectFrom(EMPLOYEE)
+                .where(EMPLOYEE.ORGANIZATION_ID.eq(id))
+                .fetchInto(Employee.class);
+        return employees;
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Object findPageOfEmployeesWithNameLike(Pageable pageable, String name) {
 
@@ -76,7 +84,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
                 .select(eId.as("id"), eName.as("name"), cName.as("chiefName"), oName.as("organizationName")).from(e)
                 .join(o).on(eOrganizationId.eq(oId))
                 .leftJoin(c).on(cId.eq(eChiefId))
-                .where(eName.contains(name)).or(cName.contains(name))
+                .where(eName.contains(name)).or(oName.contains(name))
                 .orderBy(eId)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -87,7 +95,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
                 dslContext.select(eId.as("id"), eName.as("name"), cName.as("chiefName"), oName.as("organizationName")).from(e)
                         .join(o).on(eOrganizationId.eq(oId))
                         .leftJoin(c).on(cId.eq(eChiefId))
-                        .where(eName.contains(name)).or(cName.contains(name))
+                        .where(eName.contains(name)).or(oName.contains(name))
         );
 
         StringBuilder sb = new StringBuilder();

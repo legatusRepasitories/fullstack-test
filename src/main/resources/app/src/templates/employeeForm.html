@@ -1,0 +1,16 @@
+
+Name: <input type="text" ng-model="employeeForm.name">
+<br>
+Organization: <select ng-model="employeeForm.organization"
+        ng-options="o.name for o in employeeForm.organizations"
+        ng-change="employeeForm.getOrganizationEmployees()">
+</select>
+<br>
+Chief: <select ng-model="employeeForm.chief"
+        ng-options="e.name for e in employeeForm.organizationEmployees">
+</select>
+
+<button ng-click="employeeForm.saveEmployee()">submit</button>
+<button ng-hide='employeeForm.isNew()' ng-click="employeeForm.delete()">delete</button>
+
+<div>{{employeeForm.result}}</div>

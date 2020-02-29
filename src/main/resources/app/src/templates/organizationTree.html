@@ -1,0 +1,12 @@
+<script type="text/ng-template" id="tree">
+    <div ng-click='organizationTree.loadChildOrganizations(organization)'>{{ organization.name }}</div>
+    <ul ng-if="organization.childOrganizations">
+        <li ng-repeat="organization in organization.childOrganizations" ng-include="'tree'">
+        </li>
+    </ul>
+</script>
+
+<ul>
+    <li ng-repeat="organization in organizationTree.baseOrganizations" ng-include="'tree'"></li>
+</ul>
+

@@ -37,6 +37,9 @@ public class EmployeeService {
         return repository.findPageOfOrganizationsWithNameLike(name, pageable);
     }
 
+    public List<Employee> findEmployeeOfOrganization(Integer id) {
+        return repository.findEmployeeOfOrganization(id);
+    }
 
     public Employee update(Employee employee) {
         return isChiefAbsentOrInSameOrganization(employee) ? repository.update(employee) : null;
