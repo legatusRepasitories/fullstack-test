@@ -11,19 +11,19 @@ public interface EmployeeRepository {
 
     Employee add(Employee employee);
 
-    Employee findById(Integer id);
+    Employee findById(Long id);
 
     Object findPageOfEmployeesWithNameLike(Pageable pageable, String name);
 
-    Page<Record4<Integer, String, String, String>> findPageOfOrganizationsWithNameLike(String name, Pageable pageable);
+    Page<Record4<Long, String, String, String>> findPageOfOrganizationsWithNameLike(String name, Pageable pageable);
 
     Employee update(Employee employee);
 
-    List<Employee> findEmployeeWorkers(Integer id);
+    List<Employee> findEmployeeWorkers(Long id);
 
     List<Employee> findEmployeesWithoutChief();
 
-    List<Employee> findEmployeeOfOrganization(Integer id);
+    List<Employee> findEmployeeOfOrganization(Long id);
 
-    Employee delete(Integer id);
+    Employee delete(Long id);
 }

@@ -1,12 +1,5 @@
 package ru.it.pro.fullstacktest.dao;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.jooq.AggregateFunction;
 import org.jooq.DSLContext;
 import org.jooq.Record3;
 import org.jooq.Result;
@@ -17,34 +10,25 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.it.pro.fullstacktest.jooq.db.tables.records.OrganizationRecord;
-import ru.it.pro.fullstacktest.model.Employee;
 import ru.it.pro.fullstacktest.model.Organization;
 
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.jooq.JSONFormat.DEFAULT_FOR_RECORDS;
 import static org.jooq.JSONFormat.RecordFormat.OBJECT;
 import static org.jooq.impl.DSL.count;
-import static org.jooq.impl.DSL.name;
 import static ru.it.pro.fullstacktest.jooq.db.tables.Employee.EMPLOYEE;
 import static ru.it.pro.fullstacktest.jooq.db.tables.Organization.ORGANIZATION;
 
 
 @Component
-public class JOOQOrganizationOrganizationRepository implements OrganizationRepository {
+public class JOOQOrganizationRepository implements OrganizationRepository {
 
     DSLContext dslContext;
 
     @Autowired
-    ObjectMapper mapper;
-
-    @Autowired
-    public JOOQOrganizationOrganizationRepository(DSLContext dslContext) {
+    public JOOQOrganizationRepository(DSLContext dslContext) {
         this.dslContext = dslContext;
     }
 
@@ -79,7 +63,7 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
 
     @Override
     @Transactional(readOnly = true)
-    public Organization findById(Integer id) {
+    public Organization findById(Long id) {
         OrganizationRecord record = dslContext.selectFrom(ORGANIZATION)
                 .where(ORGANIZATION.ID.equal(id))
                 .fetchOne();
@@ -89,7 +73,7 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
 
     @Override
     @Transactional(readOnly = true)
-    public List<Organization> findAffiliatedOrganizations(Integer id) {
+    public List<Organization> findAffiliatedOrganizations(Long id) {
 
         return dslContext
                 .selectFrom(ORGANIZATION)
@@ -139,9 +123,9 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Record3<Integer, String, Integer>> findPageOfOrganizationsWithNameLike(String organizationName, Pageable pageable) {
+    public Page<Record3<Long, String, Integer>> findPageOfOrganizationsWithNameLike(String organizationName, Pageable pageable) {
 
-        Result<Record3<Integer, String, Integer>> organizations =
+        Result<Record3<Long, String, Integer>> organizations =
         dslContext
                 .select(ORGANIZATION.ID.as("id"), ORGANIZATION.NAME.as("name"), count(EMPLOYEE.ID).as("employeeCount"))
                 .from(ORGANIZATION)
@@ -170,7 +154,7 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
 
     @Override
     @Transactional(readOnly = true)
-    public List<Organization> findPageOfOrganizationsKeySet(Integer lastId) {
+    public List<Organization> findPageOfOrganizationsKeySet(Long lastId) {
 
         return dslContext
                 .selectFrom(ORGANIZATION)
@@ -183,7 +167,7 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
 
     @Override
     @Transactional(readOnly = true)
-    public List<Organization> findPageOfOrganizationsKeySetWithNameLike(Integer lastId, String organizationName) {
+    public List<Organization> findPageOfOrganizationsKeySetWithNameLike(Long lastId, String organizationName) {
 
         return dslContext
                 .selectFrom(ORGANIZATION)
@@ -230,7 +214,7 @@ public class JOOQOrganizationOrganizationRepository implements OrganizationRepos
 
     @Override
     @Transactional
-    public Organization delete(Integer id) {
+    public Organization delete(Long id) {
         Organization deleted = findById(id);
 
         int deletedRecordCount = dslContext.deleteFrom(ORGANIZATION)

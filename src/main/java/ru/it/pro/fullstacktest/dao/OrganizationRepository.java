@@ -13,23 +13,23 @@ public interface OrganizationRepository {
 
     Organization update(Organization entity);
 
-    Organization delete(Integer id);
+    Organization delete(Long id);
 
     Organization findByName(String name);
 
-    Organization findById(Integer id);
+    Organization findById(Long id);
 
     List<Organization> findAll();
 
     Object findPageOfOrganizationsWithNameLike(Pageable pageable, String organizationName);
 
-    Page<Record3<Integer, String, Integer>> findPageOfOrganizationsWithNameLike(String organizationName, Pageable pageable);
+    Page<Record3<Long, String, Integer>> findPageOfOrganizationsWithNameLike(String organizationName, Pageable pageable);
 
-    List<Organization> findPageOfOrganizationsKeySet(Integer lastId);
+    List<Organization> findPageOfOrganizationsKeySet(Long lastId);
 
-    List<Organization> findPageOfOrganizationsKeySetWithNameLike(Integer lastId, String organizationName);
+    List<Organization> findPageOfOrganizationsKeySetWithNameLike(Long lastId, String organizationName);
 
     List<Organization> findOrganizationsBases();
 
-    List<Organization> findAffiliatedOrganizations(Integer id);
+    List<Organization> findAffiliatedOrganizations(Long id);
 }

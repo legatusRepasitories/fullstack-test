@@ -24,7 +24,7 @@ public class EmployeeService {
         return isChiefAbsentOrInSameOrganization(employee) ? repository.add(employee) : null;
     }
 
-    public Employee findById(Integer id) {
+    public Employee findById(Long id) {
         return repository.findById(id);
     }
 
@@ -33,11 +33,11 @@ public class EmployeeService {
         return repository.findPageOfEmployeesWithNameLike(pageable, name);
     }
 
-    public Page<Record4<Integer, String, String, String>> findPageOfOrganizationsWithNameLike(String name, Pageable pageable) {
+    public Page<Record4<Long, String, String, String>> findPageOfOrganizationsWithNameLike(String name, Pageable pageable) {
         return repository.findPageOfOrganizationsWithNameLike(name, pageable);
     }
 
-    public List<Employee> findEmployeeOfOrganization(Integer id) {
+    public List<Employee> findEmployeeOfOrganization(Long id) {
         return repository.findEmployeeOfOrganization(id);
     }
 
@@ -45,7 +45,7 @@ public class EmployeeService {
         return isChiefAbsentOrInSameOrganization(employee) ? repository.update(employee) : null;
     }
 
-    public List<Employee> findChiefWorkers(Integer id) {
+    public List<Employee> findChiefWorkers(Long id) {
         return repository.findEmployeeWorkers(id);
     }
 
@@ -53,7 +53,7 @@ public class EmployeeService {
         return repository.findEmployeesWithoutChief();
     }
 
-    public Employee delete(Integer id) {
+    public Employee delete(Long id) {
         if (!repository.findEmployeeWorkers(id).isEmpty()) return null;
 
         return repository.delete(id);

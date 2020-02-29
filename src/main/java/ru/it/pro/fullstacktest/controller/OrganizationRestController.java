@@ -43,7 +43,7 @@ public class OrganizationRestController {
     }
 
     @GetMapping(value = "/springList")
-    public Page<Record3<Integer, String, Integer>> findPageOfOrganizationsOffset(
+    public Page<Record3<Long, String, Integer>> findPageOfOrganizationsOffset(
             @RequestParam(value = "name", defaultValue = "") String organizationName,
             @PageableDefault(size = 5) Pageable pageable) {
 
@@ -54,7 +54,7 @@ public class OrganizationRestController {
     //TODO: keySet pagination
     @GetMapping(value = "/keySet")
     public Object findPageOfOrganizationsKeySet(
-            @RequestParam(defaultValue = "0") Integer lastId,
+            @RequestParam(defaultValue = "0") Long lastId,
             @RequestParam(value = "name", defaultValue = "") String organizationName) {
 
         return organizationService.findPageOfOrganizationsKeySet(lastId, organizationName);
@@ -73,7 +73,7 @@ public class OrganizationRestController {
 
 
     @GetMapping(path = "/{id}")
-    public Organization findOrganizationById(@PathVariable Integer id) {
+    public Organization findOrganizationById(@PathVariable Long id) {
         return organizationService.findById(id);
     }
 
@@ -84,12 +84,12 @@ public class OrganizationRestController {
     }
 
     @GetMapping(path = "/{id}/child")
-    public List<Organization> findAffiliatedOrganizations(@PathVariable Integer id) {
+    public List<Organization> findAffiliatedOrganizations(@PathVariable Long id) {
         return organizationService.findAffiliatedOrganizations(id);
     }
 
     @DeleteMapping(path = "/{id}")
-    public Organization deleteOrganizationById(@PathVariable Integer id) {
+    public Organization deleteOrganizationById(@PathVariable Long id) {
         return organizationService.delete(id);
 
     }

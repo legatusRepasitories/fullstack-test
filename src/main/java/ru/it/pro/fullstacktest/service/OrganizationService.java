@@ -32,12 +32,12 @@ public class OrganizationService {
         return dao.findPageOfOrganizationsWithNameLike(pageable, organizationName);
     }
 
-    public Page<Record3<Integer, String, Integer>> findPageOfOrganizations(String organizationName, Pageable pageable) {
+    public Page<Record3<Long, String, Integer>> findPageOfOrganizations(String organizationName, Pageable pageable) {
         return dao.findPageOfOrganizationsWithNameLike(organizationName, pageable);
     }
 
     //TODO later
-    public Object findPageOfOrganizationsKeySet(Integer lastId, String organizationName) {
+    public Object findPageOfOrganizationsKeySet(Long lastId, String organizationName) {
         return organizationName == null ?
                 dao.findPageOfOrganizationsKeySet(lastId) : dao.findPageOfOrganizationsKeySetWithNameLike(lastId, organizationName);
     }
@@ -46,7 +46,7 @@ public class OrganizationService {
         return dao.findOrganizationsBases();
     }
 
-    public Organization findById(Integer id) {
+    public Organization findById(Long id) {
         return dao.findById(id);
     }
 
@@ -54,7 +54,7 @@ public class OrganizationService {
         return dao.findByName(name);
     }
 
-    public List<Organization> findAffiliatedOrganizations(Integer id) {
+    public List<Organization> findAffiliatedOrganizations(Long id) {
         return dao.findAffiliatedOrganizations(id);
     }
 
@@ -62,7 +62,7 @@ public class OrganizationService {
         return dao.update(organization);
     }
 
-    public Organization delete(Integer id) {
+    public Organization delete(Long id) {
         List<Organization> affiliatedOrganizations = dao.findAffiliatedOrganizations(id);
 
         if (affiliatedOrganizations.isEmpty()) {

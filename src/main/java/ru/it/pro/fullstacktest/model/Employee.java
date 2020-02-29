@@ -1,19 +1,19 @@
 package ru.it.pro.fullstacktest.model;
 
 public class Employee {
-    private Integer id;
+    private Long id;
     private String name;
-    private Integer organizationId;
-    private Integer chiefId;
+    private Long organizationId;
+    private Long chiefId;
 
     public Employee() {
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -25,19 +25,19 @@ public class Employee {
         this.name = name;
     }
 
-    public Integer getOrganizationId() {
+    public Long getOrganizationId() {
         return organizationId;
     }
 
-    public void setOrganizationId(Integer organizationId) {
+    public void setOrganizationId(Long organizationId) {
         this.organizationId = organizationId;
     }
 
-    public Integer getChiefId() {
+    public Long getChiefId() {
         return chiefId;
     }
 
-    public void setChiefId(Integer chiefId) {
+    public void setChiefId(Long chiefId) {
         this.chiefId = chiefId;
     }
 }

@@ -29,12 +29,12 @@ public class EmployeeRestController {
     }
 
     @GetMapping(path = "/{id}")
-    public Employee findById(@PathVariable Integer id) {
+    public Employee findById(@PathVariable Long id) {
         return employeeService.findById(id);
     }
 
     @GetMapping(path = "/{id}/child")
-    public List<Employee> findChiefWorkers(@PathVariable Integer id) {
+    public List<Employee> findChiefWorkers(@PathVariable Long id) {
         return employeeService.findChiefWorkers(id);
     }
 
@@ -51,12 +51,12 @@ public class EmployeeRestController {
     }
 
     @GetMapping(path = "/organization/{id}")
-    public List<Employee> findEmployeeOfOrganization(@PathVariable Integer id) {
+    public List<Employee> findEmployeeOfOrganization(@PathVariable Long id) {
         return employeeService.findEmployeeOfOrganization(id);
     }
 
     @GetMapping(path = "/springList")
-    public Page<Record4<Integer, String, String, String>> findPageOfOrganizationsWithNameLike(@RequestParam(defaultValue = "") String name,
+    public Page<Record4<Long, String, String, String>> findPageOfOrganizationsWithNameLike(@RequestParam(defaultValue = "") String name,
                                                                                               @PageableDefault(size = 5) Pageable pageable) {
         return employeeService.findPageOfOrganizationsWithNameLike(name, pageable);
     }
@@ -67,7 +67,7 @@ public class EmployeeRestController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public Employee delete(@PathVariable Integer id) {
+    public Employee delete(@PathVariable Long id) {
         return employeeService.delete(id);
     }
 }

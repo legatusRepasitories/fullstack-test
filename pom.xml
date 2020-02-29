@@ -16,7 +16,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <skip.db.creation>true</skip.db.creation>
+        <skip.db.creation>false</skip.db.creation>
     </properties>
 
     <dependencies>
@@ -116,8 +116,8 @@
                             <autocommit>true</autocommit>
                             <!-- Configure the location of the invoked SQL script -->
                             <srcFiles>
-                                <srcFile>src/main/resources/db/migration/V1__createTables.sql</srcFile>
-                                <srcFile>src/main/resources/db/migration/V2__populateTables.sql</srcFile>
+                                <srcFile>src/main/resources/db/createTables.sql</srcFile>
+                                <srcFile>src/main/resources/db/populateTables.sql</srcFile>
                             </srcFiles>
                         </configuration>
                     </execution>

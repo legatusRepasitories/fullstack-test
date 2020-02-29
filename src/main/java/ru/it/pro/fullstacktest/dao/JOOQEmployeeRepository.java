@@ -1,8 +1,6 @@
 package ru.it.pro.fullstacktest.dao;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
+
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,11 +13,11 @@ import ru.it.pro.fullstacktest.jooq.db.tables.records.OrganizationRecord;
 import ru.it.pro.fullstacktest.model.Employee;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.jooq.JSONFormat.DEFAULT_FOR_RECORDS;
 import static org.jooq.JSONFormat.RecordFormat.ARRAY;
 import static org.jooq.JSONFormat.RecordFormat.OBJECT;
+import static org.springframework.transaction.annotation.Propagation.MANDATORY;
 import static ru.it.pro.fullstacktest.jooq.db.tables.Employee.EMPLOYEE;
 import static ru.it.pro.fullstacktest.jooq.db.tables.Organization.ORGANIZATION;
 
@@ -45,7 +43,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Employee findById(Integer id) {
+    public Employee findById(Long id) {
         EmployeeRecord record = dslContext.selectFrom(EMPLOYEE)
                 .where(EMPLOYEE.ID.eq(id))
                 .fetchOne();
@@ -54,7 +52,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    public List<Employee> findEmployeeOfOrganization(Integer id) {
+    public List<Employee> findEmployeeOfOrganization(Long id) {
         List<Employee> employees = dslContext.selectFrom(EMPLOYEE)
                 .where(EMPLOYEE.ORGANIZATION_ID.eq(id))
                 .fetchInto(Employee.class);
@@ -66,17 +64,17 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     public Object findPageOfEmployeesWithNameLike(Pageable pageable, String name) {
 
         Table<EmployeeRecord> e = EMPLOYEE.as("e");
-        Field<Integer> eId = e.field(EMPLOYEE.ID);
+        Field<Long> eId = e.field(EMPLOYEE.ID);
         Field<String> eName = e.field(EMPLOYEE.NAME);
-        Field<Integer> eChiefId = e.field(EMPLOYEE.CHIEF_ID);
-        Field<Integer> eOrganizationId = e.field(EMPLOYEE.ORGANIZATION_ID);
+        Field<Long> eChiefId = e.field(EMPLOYEE.CHIEF_ID);
+        Field<Long> eOrganizationId = e.field(EMPLOYEE.ORGANIZATION_ID);
 
         Table<EmployeeRecord> c = EMPLOYEE.as("c");
-        Field<Integer> cId = c.field(EMPLOYEE.ID);
+        Field<Long> cId = c.field(EMPLOYEE.ID);
         Field<String> cName = c.field(EMPLOYEE.NAME);
 
         Table<OrganizationRecord> o = ORGANIZATION.as("o");
-        Field<Integer> oId = o.field(ORGANIZATION.ID);
+        Field<Long> oId = o.field(ORGANIZATION.ID);
         Field<String> oName = o.field(ORGANIZATION.NAME);
 
 
@@ -113,29 +111,28 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
 
     }
 
-    @Autowired
-    ObjectMapper mapper;
+
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Record4<Integer, String, String, String>> findPageOfOrganizationsWithNameLike(String name, Pageable pageable) {
+    public Page<Record4<Long, String, String, String>> findPageOfOrganizationsWithNameLike(String name, Pageable pageable) {
 
         Table<EmployeeRecord> e = EMPLOYEE.as("e");
-        Field<Integer> eId = e.field(EMPLOYEE.ID);
+        Field<Long> eId = e.field(EMPLOYEE.ID);
         Field<String> eName = e.field(EMPLOYEE.NAME);
-        Field<Integer> eChiefId = e.field(EMPLOYEE.CHIEF_ID);
-        Field<Integer> eOrganizationId = e.field(EMPLOYEE.ORGANIZATION_ID);
+        Field<Long> eChiefId = e.field(EMPLOYEE.CHIEF_ID);
+        Field<Long> eOrganizationId = e.field(EMPLOYEE.ORGANIZATION_ID);
 
         Table<EmployeeRecord> c = EMPLOYEE.as("c");
-        Field<Integer> cId = c.field(EMPLOYEE.ID);
+        Field<Long> cId = c.field(EMPLOYEE.ID);
         Field<String> cName = c.field(EMPLOYEE.NAME);
 
         Table<OrganizationRecord> o = ORGANIZATION.as("o");
-        Field<Integer> oId = o.field(ORGANIZATION.ID);
+        Field<Long> oId = o.field(ORGANIZATION.ID);
         Field<String> oName = o.field(ORGANIZATION.NAME);
 
 
-        Result<Record4<Integer, String, String, String>> employees = dslContext
+        Result<Record4<Long, String, String, String>> employees = dslContext
                 .select(eId.as("id"), eName.as("name"), cName.as("chiefName"), oName.as("organizationName")).from(e)
                 .join(o).on(eOrganizationId.eq(oId))
                 .leftJoin(c).on(cId.eq(eChiefId))
@@ -145,7 +142,6 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        SerializationConfig serializationConfig = mapper.getSerializationConfig();
         long totalCount = dslContext.fetchCount(
                 dslContext.select(eId.as("id"), eName.as("name"), cName.as("chiefName"), oName.as("organizationName")).from(e)
                         .join(o).on(eOrganizationId.eq(oId))
@@ -170,7 +166,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Employee> findEmployeeWorkers(Integer id) {
+    public List<Employee> findEmployeeWorkers(Long id) {
         return dslContext.selectFrom(EMPLOYEE)
                 .where(EMPLOYEE.CHIEF_ID.eq(id))
                 .fetchInto(Employee.class);
@@ -187,7 +183,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
 
     @Override
     @Transactional
-    public Employee delete(Integer id) {
+    public Employee delete(Long id) {
 
         Employee record = findById(id);
         dslContext.deleteFrom(EMPLOYEE)
