@@ -6,6 +6,7 @@ export default class EmployeeListController {
         this.searchName = '';
         this.pageSize = 5;
         this.employees = [];
+        this.maxSize = 5;
         this.getEmployees();
     }
 

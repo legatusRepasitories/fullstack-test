@@ -6,6 +6,7 @@ export default class OrganizationListController {
         this.searchName = '';
         this.pageSize = 5;
         this.organizations = [];
+        this.maxSize = 5;
         this.getOrganizations();
     }
 

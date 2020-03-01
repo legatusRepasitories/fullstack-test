@@ -38,5 +38,8 @@
 <ul class="d-flex justify-content-center" uib-pagination items-per-page="organizationList.pageSize"
     total-items="organizationList.organizationsTotal"
     ng-model="organizationList.currentPage"
-    ng-change="organizationList.getOrganizations()"></ul>
+    ng-change="organizationList.getOrganizations()"
+    max-size="organizationList.maxSize"
+    boundary-links="true">
+</ul>
 

@@ -38,5 +38,9 @@
 <ul class="d-flex justify-content-center" uib-pagination items-per-page='employeeList.pageSize'
     total-items="employeeList.employeesTotal"
     ng-model="employeeList.currentPage"
-    ng-change="employeeList.getEmployees()"></ul>
+    ng-change="employeeList.getEmployees()"
+    max-size="employeeList.maxSize"
+    boundary-links="true">
+</ul>
+
 
