@@ -43,6 +43,11 @@ public class EmployeeService {
 
     }
 
+    @Transactional(readOnly = true)
+    public String findKeySetOfEmployeesWithNameLike(Long lastId, String name) {
+        return employeeRepository.findKeySetOfEmployeesWithNameLike(lastId, name);
+    }
+
 
     @Transactional(readOnly = true)
     public List<Employee> findEmployeeOfOrganization(Long id) {

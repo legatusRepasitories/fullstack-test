@@ -13,6 +13,8 @@ public interface EmployeeRepository {
 
     String findPageOfEmployeesWithNameLike(Pageable pageable, String name);
 
+    String findKeySetOfEmployeesWithNameLike(Long lastId, String name);
+
     List<Employee> findEmployeeWorkers(Long id);
 
     List<Employee> findEmployeesWithoutChief();

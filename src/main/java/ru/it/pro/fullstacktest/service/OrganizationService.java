@@ -38,7 +38,7 @@ public class OrganizationService {
         return dao.findPageOfOrganizationsWithNameLike(pageable, organizationName);
     }
 
-    
+
     @Transactional(readOnly = true)
     public String findPageOfOrganizationsKeySet(Long lastId, String organizationName) {
         return dao.findKeySetOfOrganizationsWithNameLike(lastId, organizationName);

@@ -52,6 +52,13 @@ public class EmployeeRestController {
         return employeeService.findPageOfEmployees(pageable, name.strip());
     }
 
+    @GetMapping(path = "/keySet", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String findKeySetOfEmployeesWithNameLike(@RequestParam(defaultValue = "0") Long lastId,
+                                                    @RequestParam(value = "name", defaultValue = "") String name) {
+
+        return employeeService.findKeySetOfEmployeesWithNameLike(lastId, name);
+    }
+
 
     @GetMapping(path = "/organization/{id}")
     public List<Employee> findEmployeeOfOrganization(@PathVariable Long id) {

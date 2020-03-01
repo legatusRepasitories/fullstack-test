@@ -36,8 +36,8 @@ public class OrganizationRestController {
         return organizationService.findPageOfOrganizations(pageable, organizationName);
     }
 
-    //TODO: keySet pagination
-    @GetMapping(value = "/keySet")
+
+    @GetMapping(value = "/keySet", produces = MediaType.APPLICATION_JSON_VALUE)
     public String findPageOfOrganizationsKeySet(
             @RequestParam(defaultValue = "0") Long lastId,
             @RequestParam(value = "name", defaultValue = "") String organizationName) {

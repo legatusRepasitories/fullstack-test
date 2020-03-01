@@ -1,0 +1,44 @@
+<div class="row mb-3">
+    <div class="col-8">
+        <input type='text' ng-model="empKeySet.searchName">
+        <button type="button" class="btn btn-outline-primary ml-2" ng-click='empKeySet.loadEmployees()'>
+            Search
+        </button>
+    </div>
+    <div class="col d-flex justify-content-end">
+        <a href="/employeeForm">
+            <button type="button" class="btn btn-outline-success">Add Employee</button>
+        </a>
+    </div>
+</div>
+<table class="table table-striped">
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>chief name</th>
+        <th>organization name</th>
+        <th>#</th>
+    </tr>
+    <tr ng-repeat='emp in empKeySet.employees'>
+        <td>{{emp.id}}</td>
+        <td>{{emp.name}}</td>
+        <td>{{emp.chiefName}}</td>
+        <td>{{emp.organizationName}}</td>
+        <td>
+            <a href=/employeeForm/{{emp.id}}>
+                <button type="button" class="btn-sm btn-outline-primary">
+                    edit
+                </button>
+            </a>
+        </td>
+    </tr>
+</table>
+
+<div class="d-flex justify-content-center" ng-hide="empKeySet.allFetched">
+    <button class="btn btn-primary" ng-click="empKeySet.loadMoreEmployees()">
+        Load More
+    </button>
+</div>
+<div class="d-flex justify-content-center text-info" ng-show="empKeySet.allFetched">
+    End of List
+</div>

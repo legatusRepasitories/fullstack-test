@@ -116,6 +116,35 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
 
     @Override
     @Transactional(propagation = MANDATORY)
+    public String findKeySetOfEmployeesWithNameLike(Long lastId, String name) {
+        Table<EmployeeRecord> e = EMPLOYEE.as("e");
+        Field<Long> eId = e.field(EMPLOYEE.ID);
+        Field<String> eName = e.field(EMPLOYEE.NAME);
+        Field<Long> eChiefId = e.field(EMPLOYEE.CHIEF_ID);
+        Field<Long> eOrganizationId = e.field(EMPLOYEE.ORGANIZATION_ID);
+
+        Table<EmployeeRecord> c = EMPLOYEE.as("c");
+        Field<Long> cId = c.field(EMPLOYEE.ID);
+        Field<String> cName = c.field(EMPLOYEE.NAME);
+
+        Table<OrganizationRecord> o = ORGANIZATION.as("o");
+        Field<Long> oId = o.field(ORGANIZATION.ID);
+        Field<String> oName = o.field(ORGANIZATION.NAME);
+
+        return  dslContext
+                .select(eId.as("id"), eName.as("name"), cName.as("chiefName"), oName.as("organizationName")).from(e)
+                .join(o).on(eOrganizationId.eq(oId))
+                .leftJoin(c).on(cId.eq(eChiefId))
+                .where(eName.contains(name)).or(oName.contains(name))
+                .orderBy(eId)
+                .seek(lastId)
+                .limit(5)
+                .fetch()
+                .formatJSON(DEFAULT_FOR_RECORDS.recordFormat(OBJECT));
+    }
+
+    @Override
+    @Transactional(propagation = MANDATORY)
     public Employee update(Employee employee) {
 
         EmployeeRecord record = dslContext.newRecord(EMPLOYEE, employee);
