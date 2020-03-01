@@ -38,7 +38,7 @@ public class OrganizationRestController {
 
     //TODO: keySet pagination
     @GetMapping(value = "/keySet")
-    public Object findPageOfOrganizationsKeySet(
+    public String findPageOfOrganizationsKeySet(
             @RequestParam(defaultValue = "0") Long lastId,
             @RequestParam(value = "name", defaultValue = "") String organizationName) {
 

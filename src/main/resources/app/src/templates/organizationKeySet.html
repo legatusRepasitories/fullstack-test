@@ -1,0 +1,45 @@
+<div class="row mb-3">
+    <div class="col-8">
+        <input type='text' ng-model="orgKeySet.searchName">
+        <button type="button" class="btn btn-outline-primary ml-2" ng-click='orgKeySet.loadOrganizations()'>
+            Search
+        </button>
+    </div>
+    <div class="col d-flex justify-content-end">
+        <a href="/organizationForm">
+            <button type="button" class="btn btn-outline-success">Add Organization</button>
+        </a>
+    </div>
+</div>
+<table class="table table-striped">
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>employee count</th>
+        <th>#</th>
+
+    </tr>
+    <tr ng-repeat="org in orgKeySet.organizations">
+
+        <td>{{org.id}}</td>
+        <td>{{org.name}}</td>
+        <td>{{org.employeeCount}}</td>
+        <td>
+            <a href=/organizationForm/{{org.id}}>
+                <button type="button" class="btn-sm btn-outline-primary">
+                    edit
+                </button>
+            </a>
+        </td>
+
+    </tr>
+</table>
+
+<div class="d-flex justify-content-center" ng-hide="orgKeySet.allFetched">
+<button class="btn btn-primary" ng-click="orgKeySet.loadMoreOrganizations()">
+    Load More
+</button>
+</div>
+<div class="d-flex justify-content-center text-info" ng-show="orgKeySet.allFetched">
+   End of List
+</div>

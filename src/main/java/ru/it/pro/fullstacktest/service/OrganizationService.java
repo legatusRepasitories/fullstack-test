@@ -38,11 +38,10 @@ public class OrganizationService {
         return dao.findPageOfOrganizationsWithNameLike(pageable, organizationName);
     }
 
-    //TODO later
+    
     @Transactional(readOnly = true)
-    public Object findPageOfOrganizationsKeySet(Long lastId, String organizationName) {
-        return organizationName == null ?
-                dao.findPageOfOrganizationsKeySet(lastId) : dao.findPageOfOrganizationsKeySetWithNameLike(lastId, organizationName);
+    public String findPageOfOrganizationsKeySet(Long lastId, String organizationName) {
+        return dao.findKeySetOfOrganizationsWithNameLike(lastId, organizationName);
     }
 
     @Transactional(readOnly = true)

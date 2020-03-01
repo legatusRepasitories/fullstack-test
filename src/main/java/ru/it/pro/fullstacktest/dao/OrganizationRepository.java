@@ -21,9 +21,7 @@ public interface OrganizationRepository {
 
     String findPageOfOrganizationsWithNameLike(Pageable pageable, String organizationName);
 
-    List<Organization> findPageOfOrganizationsKeySet(Long lastId);
-
-    List<Organization> findPageOfOrganizationsKeySetWithNameLike(Long lastId, String organizationName);
+    String findKeySetOfOrganizationsWithNameLike(Long lastId, String organizationName);
 
     List<Organization> findOrganizationsBases();
 

@@ -120,28 +120,17 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
 
     @Override
     @Transactional(propagation = MANDATORY)
-    public List<Organization> findPageOfOrganizationsKeySet(Long lastId) {
+    public String findKeySetOfOrganizationsWithNameLike(Long lastId, String organizationName) {
 
-        return dslContext
-                .selectFrom(ORGANIZATION)
-                .orderBy(ORGANIZATION.ID)
-                .seek(lastId)
-                .limit(5)
-                .fetchInto(Organization.class);
-
-    }
-
-    @Override
-    @Transactional(propagation = MANDATORY)
-    public List<Organization> findPageOfOrganizationsKeySetWithNameLike(Long lastId, String organizationName) {
-
-        return dslContext
-                .selectFrom(ORGANIZATION)
+        return dslContext.select(ORGANIZATION.ID.as("id"), ORGANIZATION.NAME.as("name"), count(EMPLOYEE.ID).as("employeeCount"))
+                .from(ORGANIZATION)
+                .leftJoin(EMPLOYEE).on(EMPLOYEE.ORGANIZATION_ID.eq(ORGANIZATION.ID))
                 .where(ORGANIZATION.NAME.contains(organizationName))
+                .groupBy(ORGANIZATION.ID)
                 .orderBy(ORGANIZATION.ID)
                 .seek(lastId)
                 .limit(5)
-                .fetchInto(Organization.class);
+                .fetch().formatJSON(DEFAULT_FOR_RECORDS.recordFormat(OBJECT));
 
     }
 

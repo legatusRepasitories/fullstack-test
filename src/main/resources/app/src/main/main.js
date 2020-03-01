@@ -9,10 +9,11 @@ import organizationList from '../components/organizationList';
 import employeeForm from '../components/employeeForm';
 import organizationForm from '../components/organizationForm';
 import tree from '../components/tree';
+import organizationKeySet from '../components/organizationKeySet';
 
 const app = angular.module('app',
     [ngRoute, ui_bootstrap4, home, employeeList, organizationList,
-        employeeForm, organizationForm,tree])
+        employeeForm, organizationForm, tree, organizationKeySet])
     .config(['$locationProvider', function ($locationProvider) {
         $locationProvider.html5Mode(true);
     }]);
