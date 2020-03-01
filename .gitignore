@@ -21,3 +21,4 @@ target/
 *.ipr
 
 /src/main/resources/app/node_modules/
+/src/main/resources/app/node/

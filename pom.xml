@@ -75,6 +75,55 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
+
+            <!-- prepare frontend -->
+            <plugin>
+
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.9.1</version>
+
+                <configuration>
+                    <workingDirectory>src/main/resources/app</workingDirectory>
+                </configuration>
+
+                <executions>
+
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <!-- See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
+                            <nodeVersion>v12.16.1</nodeVersion>
+                            <npmVersion>6.13.4</npmVersion>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <!-- Optional configuration which provides for running any npm command -->
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>webpack-build</id>
+                        <goals><goal>npm</goal></goals>
+                        <configuration>
+                            <arguments>run dev</arguments>
+                        </configuration>
+                    </execution>
+
+                </executions>
+
+            </plugin>
+
             <!-- Read properties -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
