@@ -1,7 +1,5 @@
 package ru.it.pro.fullstacktest.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jooq.JSONFormat;
 import org.jooq.Record3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,11 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.it.pro.fullstacktest.jooq.db.tables.records.OrganizationRecord;
 import ru.it.pro.fullstacktest.model.Organization;
 import ru.it.pro.fullstacktest.service.OrganizationService;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController

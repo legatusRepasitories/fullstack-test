@@ -1,16 +1,37 @@
+<form>
 
-Name: <input type="text" ng-model="employeeForm.name">
-<br>
-Organization: <select ng-model="employeeForm.organization"
-        ng-options="o.name for o in employeeForm.organizations"
-        ng-change="employeeForm.getOrganizationEmployees()">
-</select>
-<br>
-Chief: <select ng-model="employeeForm.chief"
-        ng-options="e.name for e in employeeForm.organizationEmployees">
-</select>
+    <div class="form-group">
+        <label>Name</label>
+        <input type="text" class="form-control" required ng-model="employeeForm.name"/>
+    </div>
 
-<button ng-click="employeeForm.saveEmployee()">submit</button>
-<button ng-hide='employeeForm.isNew()' ng-click="employeeForm.delete()">delete</button>
+    <div class="form-group">
+        <label>Organization</label>
+        <select required class="form-control" ng-model="employeeForm.organization"
+                ng-options="o.name for o in employeeForm.organizations"
+                ng-change="employeeForm.getOrganizationEmployees()">
+            <option value="">Please select</option>
+        </select>
+    </div>
 
-<div>{{employeeForm.result}}</div>
+    <div class="form-group">
+        <label>Chief</label>
+        <select class="form-control" ng-model="employeeForm.chief"
+                ng-options="e.name for e in employeeForm.organizationEmployees">
+            <option value="">Please select</option>
+        </select>
+    </div>
+    <div class="row">
+    <div class="col d-flex justify-content-start">
+        <button type="submit" class="d-flex justify-content-start btn btn-success" ng-click="employeeForm.saveEmployee()">Save</button>
+    </div>
+        <div class="col d-flex justify-content-end">
+        <button class="d-flex justify-content-end btn btn-danger" ng-hide='employeeForm.isNew()' ng-click="employeeForm.delete()">Delete</button>
+    </div>
+    </div>
+
+
+</form>
+
+<div class="text-success d-flex justify-content-center">{{employeeForm.result}}</div>
+<div class="text-danger d-flex justify-content-center">{{employeeForm.error}}</div>

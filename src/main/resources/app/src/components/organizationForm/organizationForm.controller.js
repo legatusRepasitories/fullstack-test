@@ -61,7 +61,11 @@ export default class OrganizationFormController {
     delete() {
         this.$http.delete(`api/organization/${this.id}`).then(response => {
 
-            this.result = response.data.length === 0 ? 'cannot be deleted': 'deleted';
+            if (response.data.length === 0) {
+                this.error = 'cannot be deleted';
+            } else {
+                this.result = 'deleted';
+            }
         });
     }
 

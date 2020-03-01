@@ -54,12 +54,20 @@ export default class EmployeeFormController {
 
 
     getOrganizationEmployees() {
+        console.log(this.organization);
+        if (this.organization === undefined) {
+            return;
+        }
         this.$http.get('api/employee/organization/' + this.organization.id)
             .then(response => this.organizationEmployees = response.data);
     }
 
 
     saveEmployee() {
+        if (this.organization === undefined) {
+            this.error = 'You must pick organization';
+            return;
+        }
         let employee = {
             id: this.isNew() ? null : this.id,
             name: this.name,
@@ -78,8 +86,12 @@ export default class EmployeeFormController {
     delete() {
         this.$http.delete(`api/employee/${this.id}`).then(response => {
 
-            this.result = response.data.length === 0 ? 'cannot be deleted': 'deleted';
-        });
+            if (response.data.length === 0) {
+                this.error = 'cannot be deleted'
+            } else {
+                this.result = 'deleted';
+            }
+        })
     }
 
 }

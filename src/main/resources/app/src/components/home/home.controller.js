@@ -4,6 +4,7 @@ export default class HomeController {
     }
 
     changeName() {
-        this.name = 'angular-tips';
+        this.name = 'angular_js';
+
     }
 }

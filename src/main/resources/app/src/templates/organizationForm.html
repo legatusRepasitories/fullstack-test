@@ -1,12 +1,26 @@
+<form>
+    <div class="form-group">
+        <label>Name</label>
+        <input type="text" class="form-control" required ng-model="organizationForm.name"/>
+    </div>
 
-Name: <input type="text" ng-model="organizationForm.name">
-<br>
-Head Organization: <select ng-model="organizationForm.organization"
-                      ng-options="o.name for o in organizationForm.organizations">
-</select>
-<br>
+    <div class="form-group">
+        <label>Head Organization</label>
+        <select class="form-control" ng-model="organizationForm.organization"
+                ng-options="o.name for o in organizationForm.organizations">
+            <option value="">Please select</option>
+        </select>
+    </div>
 
-<button ng-click='organizationForm.saveOrganization()'>submit</button><br>
-<button ng-hide='organizationForm.isNew()' ng-click="organizationForm.delete()">delete</button>
+    <div class="row">
+        <div class="col d-flex justify-content-start">
+            <button type="submit" class="d-flex justify-content-start btn btn-success" ng-click="organizationForm.saveOrganization()">Save</button>
+        </div>
+        <div class="col d-flex justify-content-end">
+            <button class="d-flex justify-content-end btn btn-danger" ng-hide='organizationForm.isNew()' ng-click="organizationForm.delete()">Delete</button>
+        </div>
+    </div>
+</form>
 
-<div>{{organizationForm.result}}</div>
+<div class="text-success d-flex justify-content-center">{{organizationForm.result}}</div>
+<div class="text-danger d-flex justify-content-center">{{organizationForm.error}}</div>

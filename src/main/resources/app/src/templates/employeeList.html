@@ -1,6 +1,17 @@
-<input type='text' ng-model="employeeList.searchName">
-<button ng-click='employeeList.getEmployees()'>Search</button><br>
-<a href="/employeeForm">Add Employee</a>
+
+<div class="row mb-3">
+    <div class="col-8">
+        <input type='text' ng-model="employeeList.searchName">
+        <button type="button" class="btn btn-outline-primary ml-2" ng-click='employeeList.getEmployees()'>Search</button>
+    </div>
+    <div class="col d-flex justify-content-end">
+        <a href="/employeeForm">
+            <button type="button" class="btn btn-outline-success">Add Employee</button>
+        </a>
+    </div>
+</div>
+
+
 <table class="table">
     <tr>
         <th>id</th>
@@ -14,11 +25,17 @@
         <td>{{emp.name}}</td>
         <td>{{emp.chiefName}}</td>
         <td>{{emp.organizationName}}</td>
-        <td><a href=/employeeForm/{{emp.id}}>edit</a> </td>
+        <td>
+            <a href=/employeeForm/{{emp.id}}>
+                <button type="button" class="btn-sm btn-outline-primary">
+                    edit
+                </button>
+            </a>
+        </td>
     </tr>
 </table>
 
-<ul uib-pagination items-per-page='employeeList.pageSize'
+<ul class="d-flex justify-content-center" uib-pagination items-per-page='employeeList.pageSize'
     total-items="employeeList.employeesTotal"
     ng-model="employeeList.currentPage"
     ng-change="employeeList.getEmployees()"></ul>

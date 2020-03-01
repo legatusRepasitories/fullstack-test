@@ -1,6 +1,16 @@
-<input type='text' ng-model="organizationList.searchName">
-<button ng-click='organizationList.getOrganizations()'>Search</button><br>
-<a href="/organizationForm">Add Organization</a>
+<div class="row mb-3">
+    <div class="col-8">
+        <input type='text' ng-model="organizationList.searchName">
+        <button type="button" class="btn btn-outline-primary ml-2" ng-click='organizationList.getOrganizations()'>
+            Search
+        </button>
+    </div>
+    <div class="col d-flex justify-content-end">
+        <a href="/organizationForm">
+            <button type="button" class="btn btn-outline-success">Add Organization</button>
+        </a>
+    </div>
+</div>
 <table class="table">
     <tr>
         <th>id</th>
@@ -14,11 +24,18 @@
         <td>{{org.id}}</td>
         <td>{{org.name}}</td>
         <td>{{org.employeeCount}}</td>
-        <td><a href=/organizationForm/{{org.id}}>edit</a> </td>
+        <td>
+            <a href=/organizationForm/{{org.id}}>
+                <button type="button" class="btn-sm btn-outline-primary">
+                    edit
+                </button>
+            </a>
+        </td>
+
     </tr>
 </table>
 
-<ul uib-pagination items-per-page="organizationList.pageSize"
+<ul class="d-flex justify-content-center" uib-pagination items-per-page="organizationList.pageSize"
     total-items="organizationList.organizationsTotal"
     ng-model="organizationList.currentPage"
     ng-change="organizationList.getOrganizations()"></ul>

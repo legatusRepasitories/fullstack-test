@@ -32,7 +32,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = MANDATORY)
     public Employee add(Employee employee) {
 
         EmployeeRecord record = dslContext.newRecord(EMPLOYEE, employee);
@@ -42,7 +42,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public Employee findById(Long id) {
         EmployeeRecord record = dslContext.selectFrom(EMPLOYEE)
                 .where(EMPLOYEE.ID.eq(id))
@@ -52,15 +52,15 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
+    @Transactional(propagation = MANDATORY)
     public List<Employee> findEmployeeOfOrganization(Long id) {
-        List<Employee> employees = dslContext.selectFrom(EMPLOYEE)
+        return dslContext.selectFrom(EMPLOYEE)
                 .where(EMPLOYEE.ORGANIZATION_ID.eq(id))
                 .fetchInto(Employee.class);
-        return employees;
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public Object findPageOfEmployeesWithNameLike(Pageable pageable, String name) {
 
         Table<EmployeeRecord> e = EMPLOYEE.as("e");
@@ -101,7 +101,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
                 .append("], \"number\": ").append(pageable.getPageNumber())
                 .append(",\"numberOfElements\": ").append(pageable.getPageSize())
                 .append(",\"totalElements\": ").append(totalCount)
-                .append(",\"totalPages\": ").append((int) Math.ceil((double) totalCount/pageable.getPageSize()))
+                .append(",\"totalPages\": ").append((int) Math.ceil((double) totalCount / pageable.getPageSize()))
                 .append("}");
 
         return sb.toString();
@@ -112,9 +112,8 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
 
-
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public Page<Record4<Long, String, String, String>> findPageOfOrganizationsWithNameLike(String name, Pageable pageable) {
 
         Table<EmployeeRecord> e = EMPLOYEE.as("e");
@@ -156,7 +155,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = MANDATORY)
     public Employee update(Employee employee) {
         EmployeeRecord record = dslContext.newRecord(EMPLOYEE, employee);
         dslContext.executeUpdate(record);
@@ -165,7 +164,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public List<Employee> findEmployeeWorkers(Long id) {
         return dslContext.selectFrom(EMPLOYEE)
                 .where(EMPLOYEE.CHIEF_ID.eq(id))
@@ -174,7 +173,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public List<Employee> findEmployeesWithoutChief() {
         return dslContext.selectFrom(EMPLOYEE)
                 .where(EMPLOYEE.CHIEF_ID.isNull())
@@ -182,7 +181,7 @@ public class JOOQEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = MANDATORY)
     public Employee delete(Long id) {
 
         Employee record = findById(id);

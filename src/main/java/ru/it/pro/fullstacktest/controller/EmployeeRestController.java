@@ -57,7 +57,7 @@ public class EmployeeRestController {
 
     @GetMapping(path = "/springList")
     public Page<Record4<Long, String, String, String>> findPageOfOrganizationsWithNameLike(@RequestParam(defaultValue = "") String name,
-                                                                                              @PageableDefault(size = 5) Pageable pageable) {
+                                                                                           @PageableDefault(size = 5) Pageable pageable) {
         return employeeService.findPageOfOrganizationsWithNameLike(name, pageable);
     }
 

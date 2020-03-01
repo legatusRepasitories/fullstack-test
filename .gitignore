@@ -4,6 +4,7 @@ target/
 !**/src/main/**
 !**/src/test/**
 
+
 ### STS ###
 .apt_generated
 .classpath
@@ -19,3 +20,4 @@ target/
 *.iml
 *.ipr
 
+/src/main/resources/app/node_modules/

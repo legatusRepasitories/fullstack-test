@@ -18,6 +18,7 @@ import java.util.List;
 import static org.jooq.JSONFormat.DEFAULT_FOR_RECORDS;
 import static org.jooq.JSONFormat.RecordFormat.OBJECT;
 import static org.jooq.impl.DSL.count;
+import static org.springframework.transaction.annotation.Propagation.MANDATORY;
 import static ru.it.pro.fullstacktest.jooq.db.tables.Employee.EMPLOYEE;
 import static ru.it.pro.fullstacktest.jooq.db.tables.Organization.ORGANIZATION;
 
@@ -33,7 +34,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = MANDATORY)
     public Organization add(Organization organizationEntry) {
 
 //        OrganizationRecord persisted = dslContext.insertInto(ORGANIZATION)
@@ -51,7 +52,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
 
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public Organization findByName(String name) {
         OrganizationRecord record = dslContext.selectFrom(ORGANIZATION)
                 .where(ORGANIZATION.NAME.equal(name))
@@ -62,7 +63,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
 
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public Organization findById(Long id) {
         OrganizationRecord record = dslContext.selectFrom(ORGANIZATION)
                 .where(ORGANIZATION.ID.equal(id))
@@ -72,7 +73,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public List<Organization> findAffiliatedOrganizations(Long id) {
 
         return dslContext
@@ -83,7 +84,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public List<Organization> findAll() {
         List<Organization> organizationsEntries = new ArrayList<>();
 
@@ -92,7 +93,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public Object findPageOfOrganizationsWithNameLike(Pageable pageable, String organizationName) {
 
 
@@ -107,7 +108,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
                 .fetch().formatJSON(DEFAULT_FOR_RECORDS.recordFormat(OBJECT));
 
         long totalCount = findCountByContainsExpression(organizationName);
-        int totalPages = (int) Math.ceil((double) totalCount/pageable.getPageSize());
+        int totalPages = (int) Math.ceil((double) totalCount / pageable.getPageSize());
         StringBuilder sb = new StringBuilder();
         sb.append("{\"content\": [").append(json.substring(1, json.length() - 1))
                 .append("], \"number\": ").append(pageable.getPageNumber())
@@ -120,22 +121,21 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
     }
 
 
-
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public Page<Record3<Long, String, Integer>> findPageOfOrganizationsWithNameLike(String organizationName, Pageable pageable) {
 
         Result<Record3<Long, String, Integer>> organizations =
-        dslContext
-                .select(ORGANIZATION.ID.as("id"), ORGANIZATION.NAME.as("name"), count(EMPLOYEE.ID).as("employeeCount"))
-                .from(ORGANIZATION)
-                .leftJoin(EMPLOYEE).on(EMPLOYEE.ORGANIZATION_ID.eq(ORGANIZATION.ID))
-                .where(ORGANIZATION.NAME.contains(organizationName))
-                .groupBy(ORGANIZATION.ID)
-                .orderBy(ORGANIZATION.ID)
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetch();
+                dslContext
+                        .select(ORGANIZATION.ID.as("id"), ORGANIZATION.NAME.as("name"), count(EMPLOYEE.ID).as("employeeCount"))
+                        .from(ORGANIZATION)
+                        .leftJoin(EMPLOYEE).on(EMPLOYEE.ORGANIZATION_ID.eq(ORGANIZATION.ID))
+                        .where(ORGANIZATION.NAME.contains(organizationName))
+                        .groupBy(ORGANIZATION.ID)
+                        .orderBy(ORGANIZATION.ID)
+                        .limit(pageable.getPageSize())
+                        .offset(pageable.getOffset())
+                        .fetch();
 
         long totalCount = findCountByContainsExpression(organizationName);
 
@@ -153,7 +153,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
 
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public List<Organization> findPageOfOrganizationsKeySet(Long lastId) {
 
         return dslContext
@@ -166,7 +166,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public List<Organization> findPageOfOrganizationsKeySetWithNameLike(Long lastId, String organizationName) {
 
         return dslContext
@@ -180,7 +180,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(propagation = MANDATORY)
     public List<Organization> findOrganizationsBases() {
 
         return dslContext
@@ -191,7 +191,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = MANDATORY)
     public Organization update(Organization entry) {
 //        int updatedRecordCount = dslContext.update(ORGANIZATION)
 //                .set(ORGANIZATION.NAME, entry.getName())
@@ -213,7 +213,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
 
 
     @Override
-    @Transactional
+    @Transactional(propagation = MANDATORY)
     public Organization delete(Long id) {
         Organization deleted = findById(id);
 
