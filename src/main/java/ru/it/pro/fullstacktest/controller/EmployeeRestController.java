@@ -1,8 +1,6 @@
 package ru.it.pro.fullstacktest.controller;
 
-import org.jooq.Record4;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
@@ -28,38 +26,38 @@ public class EmployeeRestController {
         return employeeService.add(employee);
     }
 
+
     @GetMapping(path = "/{id}")
     public Employee findById(@PathVariable Long id) {
         return employeeService.findById(id);
     }
+
 
     @GetMapping(path = "/{id}/child")
     public List<Employee> findChiefWorkers(@PathVariable Long id) {
         return employeeService.findChiefWorkers(id);
     }
 
+
     @GetMapping(path = "/tree")
     public List<Employee> findEmployeesWithoutChief() {
         return employeeService.findEmployeesWithoutChief();
     }
 
+
     @GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object findPageOfEmployees(@PageableDefault(size = 5) Pageable pageable,
+    public String findPageOfEmployees(@PageableDefault(size = 5) Pageable pageable,
                                       @RequestParam(defaultValue = "") String name) {
 
         return employeeService.findPageOfEmployees(pageable, name.strip());
     }
+
 
     @GetMapping(path = "/organization/{id}")
     public List<Employee> findEmployeeOfOrganization(@PathVariable Long id) {
         return employeeService.findEmployeeOfOrganization(id);
     }
 
-    @GetMapping(path = "/springList")
-    public Page<Record4<Long, String, String, String>> findPageOfOrganizationsWithNameLike(@RequestParam(defaultValue = "") String name,
-                                                                                           @PageableDefault(size = 5) Pageable pageable) {
-        return employeeService.findPageOfOrganizationsWithNameLike(name, pageable);
-    }
 
     @PutMapping
     public Employee update(@RequestBody Employee employee) {

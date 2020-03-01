@@ -1,11 +1,7 @@
 package ru.it.pro.fullstacktest.dao;
 
 import org.jooq.DSLContext;
-import org.jooq.Record3;
-import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,10 +33,6 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
     @Transactional(propagation = MANDATORY)
     public Organization add(Organization organizationEntry) {
 
-//        OrganizationRecord persisted = dslContext.insertInto(ORGANIZATION)
-//                .set(createRecord(organizationEntry))
-//                .returning()
-//                .fetchOne();
 
         OrganizationRecord persisted = dslContext.newRecord(ORGANIZATION);
         persisted.setName(organizationEntry.getName());
@@ -94,8 +86,7 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
 
     @Override
     @Transactional(propagation = MANDATORY)
-    public Object findPageOfOrganizationsWithNameLike(Pageable pageable, String organizationName) {
-
+    public String findPageOfOrganizationsWithNameLike(Pageable pageable, String organizationName) {
 
         String json = dslContext.select(ORGANIZATION.ID.as("id"), ORGANIZATION.NAME.as("name"), count(EMPLOYEE.ID).as("employeeCount"))
                 .from(ORGANIZATION)
@@ -108,38 +99,13 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
                 .fetch().formatJSON(DEFAULT_FOR_RECORDS.recordFormat(OBJECT));
 
         long totalCount = findCountByContainsExpression(organizationName);
-        int totalPages = (int) Math.ceil((double) totalCount / pageable.getPageSize());
-        StringBuilder sb = new StringBuilder();
-        sb.append("{\"content\": [").append(json.substring(1, json.length() - 1))
-                .append("], \"number\": ").append(pageable.getPageNumber())
-                .append(",\"numberOfElements\": ").append(pageable.getPageSize())
-                .append(",\"totalElements\": ").append(totalCount)
-                .append(",\"totalPages\": ").append(totalPages)
-                .append("}");
-        return sb.toString();
 
-    }
-
-
-    @Override
-    @Transactional(propagation = MANDATORY)
-    public Page<Record3<Long, String, Integer>> findPageOfOrganizationsWithNameLike(String organizationName, Pageable pageable) {
-
-        Result<Record3<Long, String, Integer>> organizations =
-                dslContext
-                        .select(ORGANIZATION.ID.as("id"), ORGANIZATION.NAME.as("name"), count(EMPLOYEE.ID).as("employeeCount"))
-                        .from(ORGANIZATION)
-                        .leftJoin(EMPLOYEE).on(EMPLOYEE.ORGANIZATION_ID.eq(ORGANIZATION.ID))
-                        .where(ORGANIZATION.NAME.contains(organizationName))
-                        .groupBy(ORGANIZATION.ID)
-                        .orderBy(ORGANIZATION.ID)
-                        .limit(pageable.getPageSize())
-                        .offset(pageable.getOffset())
-                        .fetch();
-
-        long totalCount = findCountByContainsExpression(organizationName);
-
-        return new PageImpl<>(organizations, pageable, totalCount);
+        return String.format("{\"content\": [%s], \"number\": %d, \"numberOfElements\": %d, \"totalElements\": %d, \"totalPages\": %d}",
+                json.substring(1, json.length() - 1),
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                totalCount,
+                (int) Math.ceil((double) totalCount / pageable.getPageSize()));
 
     }
 
@@ -193,31 +159,23 @@ public class JOOQOrganizationRepository implements OrganizationRepository {
     @Override
     @Transactional(propagation = MANDATORY)
     public Organization update(Organization entry) {
-//        int updatedRecordCount = dslContext.update(ORGANIZATION)
-//                .set(ORGANIZATION.NAME, entry.getName())
-//                .set(ORGANIZATION.HEAD_ORGANIZATION_ID, entry.getHeadOrganizationId())
-//                .where(ORGANIZATION.ID.equal(entry.getId()))
-//                .execute();
-
-//        OrganizationRecord updateRecord = dslContext.fetchOne(ORGANIZATION, ORGANIZATION.ID.eq(entry.getId()));
-//        updateRecord.setName(entry.getName());
-//        updateRecord.setHeadOrganizationId(entry.getHeadOrganizationId());
-//        updateRecord.store();
 
         OrganizationRecord updateRecord = dslContext.newRecord(ORGANIZATION, entry);
 
         dslContext.executeUpdate(updateRecord);
 
         return updateRecord.into(Organization.class);
+
     }
 
 
     @Override
     @Transactional(propagation = MANDATORY)
     public Organization delete(Long id) {
+
         Organization deleted = findById(id);
 
-        int deletedRecordCount = dslContext.deleteFrom(ORGANIZATION)
+        dslContext.deleteFrom(ORGANIZATION)
                 .where(ORGANIZATION.ID.equal(id))
                 .execute();
 

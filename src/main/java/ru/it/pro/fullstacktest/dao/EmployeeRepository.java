@@ -1,7 +1,5 @@
 package ru.it.pro.fullstacktest.dao;
 
-import org.jooq.Record4;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.it.pro.fullstacktest.model.Employee;
 
@@ -13,17 +11,15 @@ public interface EmployeeRepository {
 
     Employee findById(Long id);
 
-    Object findPageOfEmployeesWithNameLike(Pageable pageable, String name);
-
-    Page<Record4<Long, String, String, String>> findPageOfOrganizationsWithNameLike(String name, Pageable pageable);
-
-    Employee update(Employee employee);
+    String findPageOfEmployeesWithNameLike(Pageable pageable, String name);
 
     List<Employee> findEmployeeWorkers(Long id);
 
     List<Employee> findEmployeesWithoutChief();
 
-    List<Employee> findEmployeeOfOrganization(Long id);
+    List<Employee> findEmployeesOfOrganization(Long id);
+
+    Employee update(Employee employee);
 
     Employee delete(Long id);
 }

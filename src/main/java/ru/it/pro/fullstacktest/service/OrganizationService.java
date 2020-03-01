@@ -1,8 +1,6 @@
 package ru.it.pro.fullstacktest.service;
 
-import org.jooq.Record3;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,13 +34,8 @@ public class OrganizationService {
     }
 
     @Transactional(readOnly = true)
-    public Object findPageOfOrganizations(Pageable pageable, String organizationName) {
+    public String findPageOfOrganizations(Pageable pageable, String organizationName) {
         return dao.findPageOfOrganizationsWithNameLike(pageable, organizationName);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<Record3<Long, String, Integer>> findPageOfOrganizations(String organizationName, Pageable pageable) {
-        return dao.findPageOfOrganizationsWithNameLike(organizationName, pageable);
     }
 
     //TODO later
@@ -80,7 +73,7 @@ public class OrganizationService {
     @Transactional
     public Organization delete(Long id) {
         List<Organization> affiliatedOrganizations = dao.findAffiliatedOrganizations(id);
-        List<Employee> workers = employeeRepository.findEmployeeOfOrganization(id);
+        List<Employee> workers = employeeRepository.findEmployeesOfOrganization(id);
 
 
         if (affiliatedOrganizations.isEmpty() && workers.isEmpty()) {

@@ -1,8 +1,6 @@
 package ru.it.pro.fullstacktest.service;
 
-import org.jooq.Record4;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,67 +12,84 @@ import java.util.List;
 @Service
 public class EmployeeService {
 
-    private EmployeeRepository repository;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     public EmployeeService(EmployeeRepository repository) {
-        this.repository = repository;
+        this.employeeRepository = repository;
     }
+
 
     @Transactional
     public Employee add(Employee employee) {
-        return isChiefAbsentOrInSameOrganization(employee) ? repository.add(employee) : null;
+
+        return isChiefAbsentOrInSameOrganization(employee) ? employeeRepository.add(employee) : null;
+
     }
+
 
     @Transactional(readOnly = true)
     public Employee findById(Long id) {
-        return repository.findById(id);
+
+        return employeeRepository.findById(id);
+
     }
+
 
     @Transactional(readOnly = true)
-    public Object findPageOfEmployees(Pageable pageable, String name) {
+    public String findPageOfEmployees(Pageable pageable, String name) {
 
-        return repository.findPageOfEmployeesWithNameLike(pageable, name);
+        return employeeRepository.findPageOfEmployeesWithNameLike(pageable, name);
+
     }
 
-    @Transactional(readOnly = true)
-    public Page<Record4<Long, String, String, String>> findPageOfOrganizationsWithNameLike(String name, Pageable pageable) {
-        return repository.findPageOfOrganizationsWithNameLike(name, pageable);
-    }
 
     @Transactional(readOnly = true)
     public List<Employee> findEmployeeOfOrganization(Long id) {
-        return repository.findEmployeeOfOrganization(id);
+
+        return employeeRepository.findEmployeesOfOrganization(id);
+
     }
+
 
     @Transactional
     public Employee update(Employee employee) {
-        return isChiefAbsentOrInSameOrganization(employee) ? repository.update(employee) : null;
+
+        return isChiefAbsentOrInSameOrganization(employee) ? employeeRepository.update(employee) : null;
+
     }
 
     @Transactional(readOnly = true)
     public List<Employee> findChiefWorkers(Long id) {
-        return repository.findEmployeeWorkers(id);
+
+        return employeeRepository.findEmployeeWorkers(id);
+
     }
 
     @Transactional(readOnly = true)
     public List<Employee> findEmployeesWithoutChief() {
-        return repository.findEmployeesWithoutChief();
+
+        return employeeRepository.findEmployeesWithoutChief();
+
     }
 
     @Transactional
     public Employee delete(Long id) {
-        if (!repository.findEmployeeWorkers(id).isEmpty()) return null;
 
-        return repository.delete(id);
+        if (!employeeRepository.findEmployeeWorkers(id).isEmpty()) return null;
+
+        return employeeRepository.delete(id);
+
     }
 
 
     private boolean isChiefAbsentOrInSameOrganization(Employee employee) {
+
         if (employee.getChiefId() == null) return true;
 
-        Employee chief = repository.findById(employee.getChiefId());
-        
+        Employee chief = employeeRepository.findById(employee.getChiefId());
+
         return chief.getOrganizationId().equals(employee.getOrganizationId());
+
     }
 }

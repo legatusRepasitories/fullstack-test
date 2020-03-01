@@ -1,8 +1,6 @@
 package ru.it.pro.fullstacktest.controller;
 
-import org.jooq.Record3;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
@@ -36,15 +34,6 @@ public class OrganizationRestController {
             @RequestParam(value = "name", defaultValue = "") String organizationName) {
 
         return organizationService.findPageOfOrganizations(pageable, organizationName);
-    }
-
-    @GetMapping(value = "/springList")
-    public Page<Record3<Long, String, Integer>> findPageOfOrganizationsOffset(
-            @RequestParam(value = "name", defaultValue = "") String organizationName,
-            @PageableDefault(size = 5) Pageable pageable) {
-
-
-        return organizationService.findPageOfOrganizations(organizationName, pageable);
     }
 
     //TODO: keySet pagination
